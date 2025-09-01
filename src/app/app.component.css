@@ -1,0 +1,19 @@
+.container {
+  min-height: 100vh;
+  background-color: var(--surface-ground);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}

@@ -1,0 +1,31 @@
+<div class="container">
+  <p-menubar [model]="menuItems">
+    <ng-template pTemplate="start">
+      <span class="text-xl font-bold text-primary">Mon CV</span>
+    </ng-template>
+  </p-menubar>
+
+  <div class="content p-4">
+    <p-card header="Bienvenue" subheader="Application CV avec PrimeNG">
+      <p>PrimeNG a été intégré avec succès dans votre projet Angular !</p>
+      
+      <div class="flex gap-2 mt-3">
+        <p-button label="Bouton Principal" icon="pi pi-check"></p-button>
+        <p-button label="Bouton Secondaire" icon="pi pi-times" severity="secondary"></p-button>
+      </div>
+    </p-card>
+
+    <p-panel header="Exemple de composants PrimeNG" class="mt-4">
+      <div class="field">
+        <label for="username">Nom d'utilisateur</label>
+        <input pInputText id="username" type="text" placeholder="Entrez votre nom" class="w-full mt-2" />
+      </div>
+      
+      <div class="flex gap-2 mt-3">
+        <p-button icon="pi pi-user" label="Profil" severity="info"></p-button>
+        <p-button icon="pi pi-cog" label="Paramètres" severity="warning"></p-button>
+        <p-button icon="pi pi-sign-out" label="Déconnexion" severity="danger"></p-button>
+      </div>
+    </p-panel>
+  </div>
+</div>
