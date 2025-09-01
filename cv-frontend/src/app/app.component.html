@@ -1,0 +1,122 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header avec Bootstrap et Tailwind -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-lg">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="pi pi-user mr-2"></i>
+        CV Frontend
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="pi pi-home mr-1"></i>Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="pi pi-user mr-1"></i>Profil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="pi pi-envelope mr-1"></i>Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenu principal -->
+  <div class="container-fluid py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <!-- Card PrimeNG avec Tailwind -->
+        <div class="bg-white rounded-lg shadow-xl p-6 mb-6">
+          <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">
+              <i class="pi pi-check-circle text-green-500 mr-3"></i>
+              Projet Angular 20 Initialisé !
+            </h1>
+            <p class="text-lg text-gray-600">
+              Votre projet est configuré avec Angular 20, Tailwind CSS, Bootstrap 5 et PrimeNG
+            </p>
+          </div>
+
+          <!-- Grille de fonctionnalités -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="text-center p-4 bg-red-50 rounded-lg border border-red-200">
+              <i class="pi pi-cog text-3xl text-red-500 mb-3"></i>
+              <h3 class="font-semibold text-gray-800">Angular 20</h3>
+              <p class="text-sm text-gray-600">Framework moderne</p>
+            </div>
+            <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <i class="pi pi-palette text-3xl text-blue-500 mb-3"></i>
+              <h3 class="font-semibold text-gray-800">Tailwind CSS</h3>
+              <p class="text-sm text-gray-600">Utility-first CSS</p>
+            </div>
+            <div class="text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <i class="pi pi-desktop text-3xl text-purple-500 mb-3"></i>
+              <h3 class="font-semibold text-gray-800">Bootstrap 5</h3>
+              <p class="text-sm text-gray-600">Composants UI</p>
+            </div>
+            <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+              <i class="pi pi-star text-3xl text-green-500 mb-3"></i>
+              <h3 class="font-semibold text-gray-800">PrimeNG</h3>
+              <p class="text-sm text-gray-600">Composants avancés</p>
+            </div>
+          </div>
+
+          <!-- Boutons d'action avec Bootstrap et classes Tailwind -->
+          <div class="text-center space-x-4">
+            <button class="btn btn-primary btn-lg px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <i class="pi pi-play mr-2"></i>
+              Commencer
+            </button>
+            <button class="btn btn-outline-secondary btn-lg px-6 py-3 rounded-lg">
+              <i class="pi pi-book mr-2"></i>
+              Documentation
+            </button>
+          </div>
+        </div>
+
+        <!-- Section avec composants PrimeNG -->
+        <div class="bg-white rounded-lg shadow-xl p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+            <i class="pi pi-sparkles text-yellow-500 mr-2"></i>
+            Démonstration des composants
+          </h2>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Exemple avec PrimeNG -->
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold text-gray-700">Composants PrimeNG</h3>
+              <p-button label="Bouton PrimeNG" icon="pi pi-check" styleClass="p-button-success w-full"></p-button>
+              <p-inputText placeholder="Champ de saisie PrimeNG" styleClass="w-full"></p-inputText>
+            </div>
+            
+            <!-- Exemple avec Bootstrap -->
+            <div class="space-y-4">
+              <h3 class="text-lg font-semibold text-gray-700">Composants Bootstrap</h3>
+              <button class="btn btn-warning w-full">
+                <i class="pi pi-star mr-2"></i>
+                Bouton Bootstrap
+              </button>
+              <input type="text" class="form-control" placeholder="Champ Bootstrap">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+      <p class="mb-0">
+        <i class="pi pi-heart text-red-400 mr-1"></i>
+        Créé avec Angular 20, Tailwind CSS, Bootstrap 5 et PrimeNG
+      </p>
+    </div>
+  </footer>
+</div>
+
+<router-outlet></router-outlet>
