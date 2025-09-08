@@ -1,0 +1,40 @@
+<div class="p-4">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Job Application Tracking</h1>
+    <button pButton label="Add Application" icon="pi pi-plus"></button>
+  </div>
+
+  <p-card>
+    <p-table [value]="applications" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" responsiveLayout="scroll"
+             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
+          <th pSortableColumn="title">Job Title <p-sortIcon field="title"></p-sortIcon></th>
+          <th pSortableColumn="date">Date Applied <p-sortIcon field="date"></p-sortIcon></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-app>
+        <tr>
+          <td>{{app.company}}</td>
+          <td>{{app.title}}</td>
+          <td>{{app.date | date: 'mediumDate'}}</td>
+          <td>
+            <p-tag [value]="app.status" [severity]="getStatusSeverity(app.status)"></p-tag>
+          </td>
+          <td>
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>
+          </td>
+        </tr>
+      </ng-template>
+       <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="5" class="text-center">No applications found.</td>
+        </tr>
+    </ng-template>
+    </p-table>
+  </p-card>
+</div>

@@ -1,0 +1,61 @@
+<div class="p-8 bg-white shadow-lg border sticky top-4" *ngIf="cvData">
+  <!-- Header -->
+  <header class="text-center border-b-2 border-gray-300 pb-4" *ngIf="cvData.personalInfo">
+    <h1 class="text-4xl font-bold text-gray-800">{{ cvData.personalInfo.name || 'Your Name' }}</h1>
+    <p class="text-xl text-blue-600 font-semibold">{{ cvData.personalInfo.jobTitle || 'Your Job Title' }}</p>
+    <div class="flex justify-center gap-x-6 mt-2 text-sm text-gray-500">
+      <span>{{ cvData.personalInfo.email || 'your.email@example.com' }}</span>
+      <span *ngIf="cvData.personalInfo.phone">{{ cvData.personalInfo.phone }}</span>
+      <span *ngIf="cvData.personalInfo.address">{{ cvData.personalInfo.address }}</span>
+    </div>
+  </header>
+
+  <main class="mt-6">
+    <!-- Professional Summary -->
+    <section class="mb-6" *ngIf="cvData.professionalSummary">
+      <h2 class="text-xl font-bold border-b border-gray-200 pb-1 mb-2 text-blue-800">PROFESSIONAL SUMMARY</h2>
+      <p class="text-gray-700 text-sm">{{ cvData.professionalSummary }}</p>
+    </section>
+
+    <!-- Work Experience -->
+    <section class="mb-6" *ngIf="cvData.experiences && cvData.experiences.length > 0">
+      <h2 class="text-xl font-bold border-b border-gray-200 pb-1 mb-2 text-blue-800">WORK EXPERIENCE</h2>
+      <div *ngFor="let exp of cvData.experiences" class="mb-4">
+        <h3 class="text-lg font-semibold">{{ exp.position || 'Position' }}</h3>
+        <div class="flex justify-between text-sm text-gray-600">
+          <span>{{ exp.company || 'Company' }}</span>
+          <span>{{ exp.startDate || 'Start' }} - {{ exp.endDate || 'End' }}</span>
+        </div>
+        <p class="text-sm text-gray-700 mt-1 whitespace-pre-wrap">{{ exp.description }}</p>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="mb-6" *ngIf="cvData.educations && cvData.educations.length > 0">
+      <h2 class="text-xl font-bold border-b border-gray-200 pb-1 mb-2 text-blue-800">EDUCATION</h2>
+      <div *ngFor="let edu of cvData.educations" class="mb-2">
+        <h3 class="text-lg font-semibold">{{ edu.degree || 'Degree' }}</h3>
+        <p class="text-sm text-gray-600">{{ edu.institution || 'Institution' }} | {{ edu.endDate || 'End Date' }}</p>
+      </div>
+    </section>
+
+    <!-- Skills & Languages -->
+    <section class="mb-6 grid grid-cols-2 gap-6" *ngIf="(cvData.skills && cvData.skills.length > 0) || (cvData.languages && cvData.languages.length > 0)">
+      <div *ngIf="cvData.skills && cvData.skills.length > 0">
+        <h2 class="text-xl font-bold border-b border-gray-200 pb-1 mb-2 text-blue-800">SKILLS</h2>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let skill of cvData.skills" class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">{{ skill.name }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="cvData.languages && cvData.languages.length > 0">
+        <h2 class="text-xl font-bold border-b border-gray-200 pb-1 mb-2 text-blue-800">LANGUAGES</h2>
+        <div class="flex flex-col gap-1">
+          <div *ngFor="let lang of cvData.languages" class="text-sm">
+            <span class="font-semibold">{{ lang.name }}:</span> {{ lang.proficiency }}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

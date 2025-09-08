@@ -1,0 +1,43 @@
+<div class="p-4">
+  <h1 class="text-3xl font-bold mb-6">Cover Letter Generator</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Left: Form for input -->
+    <div>
+      <form [formGroup]="letterForm" (ngSubmit)="generateLetter()">
+        <p-panel header="Job Details">
+          <div class="flex flex-col gap-4">
+            <div>
+              <label for="cvId" class="font-semibold mb-2 block">Select CV to use as reference</label>
+              <!-- This would be a p-dropdown in a real scenario -->
+              <input pInputText placeholder="Dropdown to select a CV" class="w-full">
+            </div>
+            <div>
+              <label for="jobDescription" class="font-semibold mb-2 block">Paste Job Description</label>
+              <textarea id="jobDescription" pInputTextarea formControlName="jobDescription" [rows]="15" class="w-full" placeholder="Paste the full job description..."></textarea>
+            </div>
+          </div>
+          <ng-template pTemplate="footer">
+            <div class="flex justify-end">
+              <button pButton type="submit" label="Generate Letter" icon="pi pi-sparkles" [loading]="isLoading"></button>
+            </div>
+          </ng-template>
+        </p-panel>
+      </form>
+    </div>
+
+    <!-- Right: Display generated letter -->
+    <div>
+      <p-panel header="Generated Letter">
+        <div class="bg-white p-4 border rounded min-h-[400px] whitespace-pre-wrap text-gray-800">
+          {{ generatedLetter }}
+        </div>
+        <ng-template pTemplate="footer">
+            <div class="flex justify-end">
+              <button pButton type="button" label="Copy Text" icon="pi pi-copy" class="p-button-secondary"></button>
+            </div>
+          </ng-template>
+      </p-panel>
+    </div>
+  </div>
+</div>

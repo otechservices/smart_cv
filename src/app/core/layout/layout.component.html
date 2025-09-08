@@ -1,0 +1,32 @@
+<div class="flex flex-col h-screen">
+  <p-toolbar>
+    <div class="p-toolbar-group-start">
+      <a routerLink="/" class="flex items-center gap-2 no-underline text-gray-800">
+        <img src="favicon.ico" alt="Logo" class="h-8">
+        <span class="text-xl font-bold">CV Master</span>
+      </a>
+    </div>
+
+    <div class="p-toolbar-group-center">
+      <div class="flex gap-2">
+        <button pButton label="Dashboard" icon="pi pi-home" class="p-button-text" routerLink="/dashboard"></button>
+        <button pButton label="CV Editor" icon="pi pi-file-edit" class="p-button-text" routerLink="/cv"></button>
+        <button pButton label="Job Applications" icon="pi pi-briefcase" class="p-button-text" routerLink="/jobs"></button>
+      </div>
+    </div>
+
+    <div class="p-toolbar-group-end flex items-center gap-2">
+      <button pButton
+              (click)="toggleTheme()"
+              [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
+              class="p-button-rounded p-button-text"
+              pTooltip="Toggle Theme"
+              tooltipPosition="bottom"></button>
+      <button pButton icon="pi pi-user" class="p-button-rounded p-button-secondary" routerLink="/user"></button>
+    </div>
+  </p-toolbar>
+
+  <main class="flex-grow overflow-y-auto bg-gray-100 dark:bg-gray-800 dark:text-gray-100 p-4">
+    <router-outlet></router-outlet>
+  </main>
+</div>

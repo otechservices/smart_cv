@@ -1,0 +1,51 @@
+<div class="p-4">
+  <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <p-card>
+      <ng-template pTemplate="title">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-file text-2xl text-blue-500"></i>
+          <span class="font-bold">CVs Created</span>
+        </div>
+      </ng-template>
+      <div class="text-4xl font-bold text-center text-blue-500">{{ stats.cvsCreated }}</div>
+    </p-card>
+
+    <p-card>
+      <ng-template pTemplate="title">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-envelope text-2xl text-orange-500"></i>
+          <span class="font-bold">Letters Generated</span>
+        </div>
+      </ng-template>
+      <div class="text-4xl font-bold text-center text-orange-500">{{ stats.lettersGenerated }}</div>
+    </p-card>
+
+    <p-card>
+      <ng-template pTemplate="title">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-send text-2xl text-purple-500"></i>
+          <span class="font-bold">Applications Sent</span>
+        </div>
+      </ng-template>
+      <div class="text-4xl font-bold text-center text-purple-500">{{ stats.applicationsSent }}</div>
+    </p-card>
+
+    <p-card>
+      <ng-template pTemplate="title">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-check-circle text-2xl text-green-500"></i>
+          <span class="font-bold">Successful</span>
+        </div>
+      </ng-template>
+      <div class="text-4xl font-bold text-center text-green-500">{{ stats.applicationsSuccessful }}</div>
+    </p-card>
+  </div>
+
+  <div class="mt-8">
+    <p-panel header="Recent Activity">
+      <p class="text-gray-600">Your recent job applications and CV updates will appear here.</p>
+    </p-panel>
+  </div>
+</div>

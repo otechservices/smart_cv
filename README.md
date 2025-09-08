@@ -1,27 +1,60 @@
-# MyApp
+# CV Master - Frontend Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.8.
+Ce projet est le frontend Angular pour l'application CV Master, une plateforme de gestion de CV, de génération de lettres de motivation assistée par IA, et de candidature automatisée.
 
-## Development server
+## Stack Technique
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Angular**: Dernière version, utilisée comme framework principal.
+- **TailwindCSS**: Pour le style via des classes utilitaires.
+- **PrimeNG**: Pour la bibliothèque de composants UI (tables, boutons, cartes, etc.).
+- **Reactive Forms**: Pour la construction de formulaires dynamiques et robustes.
+- **jsPDF**: Pour la génération des CV au format PDF côté client.
+- **TypeScript**: Pour un code typé et plus sûr.
 
-## Code scaffolding
+## Structure du Projet
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+L'application est conçue selon une architecture modulaire pour séparer les responsabilités et assurer une bonne maintenabilité.
 
-## Build
+- `src/app/core/`: Contient les services singletons, le `LayoutComponent` principal, et la logique du sélecteur de thème. Tous les services qui communiquent avec le backend se trouvent dans `src/app/core/services/`.
+- `src/app/modules/`: Contient les modules fonctionnels.
+  - `cv/`: Gère la création, l'édition et la prévisualisation des CV.
+  - `job/`: Gère la génération de lettres de motivation et le suivi des candidatures.
+  - `user/`: Gère les fonctionnalités liées à l'utilisateur, comme les abonnements.
+- `src/app/shared/`: Un module destiné à partager des composants, directives ou pipes communs à travers les autres modules.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Démarrage Rapide
 
-## Running unit tests
+### Prérequis
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Node.js et npm installés sur votre machine.
+- Angular CLI installé globalement : `npm install -g @angular/cli`
 
-## Running end-to-end tests
+### Installation
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1.  Clonez le dépôt de ce projet.
+2.  Installez les dépendances du projet :
+    ```bash
+    npm install
+    ```
 
-## Further help
+### Lancer le serveur de développement
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Exécutez la commande suivante pour démarrer le serveur de développement local :
+
+```bash
+ng serve
+```
+
+L'application sera alors accessible à l'adresse `http://localhost:4200/`.
+
+## Connexion au Backend (Laravel)
+
+Toute la communication avec le backend est centralisée dans les services situés dans le répertoire `src/app/core/services/`. Ces services utilisent le `HttpClient` d'Angular.
+
+Actuellement, l'URL de l'API est une valeur de remplacement (`http://localhost:8000/api`). Pour connecter l'application à votre backend Laravel, vous devrez :
+
+1.  Mettre à jour la propriété `apiUrl` dans chaque service concerné (`CvService`, `JobService`, `AIService`, `SubscriptionService`).
+2.  **Recommandation :** Utiliser les fichiers d'environnement d'Angular (`src/environments/`) pour gérer les différentes URL d'API entre l'environnement de développement et de production.
+
+---
+Ce projet constitue une base solide et complète pour une application web moderne de gestion de CV.
