@@ -1,5 +1,5 @@
-/* Styles for LayoutComponent */
-:host {
-  display: block;
-  height: 100vh;
+:host { display: block; height: 100vh; }
+
+.sidebar {
+  transition: width .2s ease;
 }

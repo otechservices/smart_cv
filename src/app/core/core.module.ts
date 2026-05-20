@@ -3,29 +3,28 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
-// PrimeNG modules for layout
-import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { SplitButtonModule } from 'primeng/splitbutton';
+import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
+import { BadgeModule } from 'primeng/badge';
+import { AvatarModule } from 'primeng/avatar';
+import { ToastModule } from 'primeng/toast';
 
 import { LayoutComponent } from './layout/layout.component';
 
 @NgModule({
-  declarations: [
-    LayoutComponent
-  ],
+  declarations: [LayoutComponent],
   imports: [
     CommonModule,
     RouterModule,
-    HttpClientModule, // Providing HttpClient here
-    ToolbarModule,
+    HttpClientModule,
     ButtonModule,
-    SplitButtonModule,
-    TooltipModule
+    RippleModule,
+    TooltipModule,
+    BadgeModule,
+    AvatarModule,
+    ToastModule,
   ],
-  exports: [
-    LayoutComponent // Export so AppModule can use it in its template
-  ]
+  exports: [LayoutComponent, ToastModule]
 })
 export class CoreModule { }

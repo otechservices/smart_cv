@@ -1,0 +1,103 @@
+<div class="auth-shell">
+
+  <!-- Left branding panel (shared design) -->
+  <div class="auth-brand">
+    <div class="brand-inner">
+      <div class="brand-logo">
+        <i class="pi pi-file-edit"></i>
+      </div>
+      <h2>Rejoignez CV Master</h2>
+      <p>Créez votre compte gratuit et commencez à construire votre carrière dès aujourd'hui.</p>
+
+      <div class="brand-perks">
+        <div class="perk" *ngFor="let p of perks">
+          <i class="pi pi-check-circle text-green-300 text-sm"></i>
+          <span>{{ p }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right form panel -->
+  <div class="auth-form-panel">
+    <p-toast position="top-right" [baseZIndex]="9999"></p-toast>
+
+    <div class="auth-form-inner">
+
+      <div class="auth-header">
+        <h1>Créer un compte</h1>
+        <p>Gratuit, sans carte bancaire. En 30 secondes.</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+
+        <div class="field">
+          <label class="field-label">Nom complet <span class="field-required">*</span></label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-user"></i>
+            <input pInputText formControlName="name"
+                   placeholder="Alice Martin" class="w-full"
+                   [ngClass]="{'ng-invalid ng-dirty': form.get('name')?.invalid && form.get('name')?.touched}">
+          </span>
+          <small class="field-error" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+            Le nom est requis (min. 2 caractères).
+          </small>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Adresse email <span class="field-required">*</span></label>
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-envelope"></i>
+            <input pInputText type="email" formControlName="email"
+                   placeholder="vous@exemple.com" class="w-full"
+                   [ngClass]="{'ng-invalid ng-dirty': form.get('email')?.invalid && form.get('email')?.touched}">
+          </span>
+          <small class="field-error" *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched">L'email est requis.</small>
+          <small class="field-error" *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">Format invalide.</small>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Mot de passe <span class="field-required">*</span></label>
+          <span class="p-input-icon-left p-input-icon-right w-full">
+            <i class="pi pi-lock"></i>
+            <input pInputText [type]="showPassword ? 'text' : 'password'"
+                   formControlName="password"
+                   placeholder="••••••••" class="w-full"
+                   [ngClass]="{'ng-invalid ng-dirty': form.get('password')?.invalid && form.get('password')?.touched}">
+            <i class="pi cursor-pointer"
+               [ngClass]="showPassword ? 'pi-eye-slash' : 'pi-eye'"
+               (click)="showPassword = !showPassword"></i>
+          </span>
+          <small class="field-error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+            Minimum 8 caractères requis.
+          </small>
+        </div>
+
+        <button pButton pRipple type="submit"
+                label="Créer mon compte"
+                icon="pi pi-user-plus"
+                class="btn-primary w-full p-button-lg"
+                [loading]="isLoading"
+                style="border-radius:10px;padding:.9rem;font-size:.95rem;font-weight:700;">
+        </button>
+
+        <p class="text-xs text-slate-400 text-center m-0 leading-relaxed">
+          En créant un compte, vous acceptez nos
+          <a href="#" class="text-indigo-500 hover:underline">Conditions d'utilisation</a>
+          et notre
+          <a href="#" class="text-indigo-500 hover:underline">Politique de confidentialité</a>.
+        </p>
+
+      </form>
+
+      <div class="auth-divider"><span>ou</span></div>
+
+      <p class="text-center text-sm text-slate-500 m-0">
+        Déjà un compte ?
+        <a routerLink="/auth/login" class="text-indigo-600 font-semibold hover:underline ml-1">Se connecter</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>

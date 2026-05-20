@@ -1,0 +1,15 @@
+@import '../login/login.component.scss';
+
+.brand-perks {
+  display: flex;
+  flex-direction: column;
+  gap: .875rem;
+}
+
+.perk {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-size: .875rem;
+  opacity: .9;
+}

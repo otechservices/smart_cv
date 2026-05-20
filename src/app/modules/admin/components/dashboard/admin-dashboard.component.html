@@ -1,0 +1,20 @@
+<div class="page-wrapper">
+  <div class="page-header">
+    <div>
+      <h1>Dashboard Admin</h1>
+      <p>Vue d'ensemble de la plateforme SmartCV.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div *ngFor="let card of statCards" class="stat-card">
+      <div class="stat-icon" [style.background]="card.bg" [style.color]="card.color">
+        <i [class]="'pi ' + card.icon"></i>
+      </div>
+      <div class="stat-body">
+        <p class="stat-value" [style.color]="card.color">{{ getValue(card.key) }}</p>
+        <p class="stat-label">{{ card.label }}</p>
+      </div>
+    </div>
+  </div>
+</div>

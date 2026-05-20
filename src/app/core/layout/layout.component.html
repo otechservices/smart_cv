@@ -1,32 +1,86 @@
-<div class="flex flex-col h-screen">
-  <p-toolbar>
-    <div class="p-toolbar-group-start">
-      <a routerLink="/" class="flex items-center gap-2 no-underline text-gray-800">
-        <img src="favicon.ico" alt="Logo" class="h-8">
-        <span class="text-xl font-bold">CV Master</span>
-      </a>
+<p-toast position="top-right" [baseZIndex]="9999"></p-toast>
+<div class="app-shell flex h-screen overflow-hidden">
+
+  <!-- ── Sidebar ────────────────────────────────────────────── -->
+  <aside class="sidebar flex flex-col w-64 shrink-0 bg-white border-r border-slate-200 h-full overflow-y-auto">
+
+    <!-- Logo -->
+    <div class="sidebar-logo flex items-center gap-3 px-5 py-5 border-b border-slate-100">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center"
+           style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">
+        <i class="pi pi-file-edit text-white text-base"></i>
+      </div>
+      <span class="font-bold text-slate-900 text-base tracking-tight">CV Master</span>
     </div>
 
-    <div class="p-toolbar-group-center">
-      <div class="flex gap-2">
-        <button pButton label="Dashboard" icon="pi pi-home" class="p-button-text" routerLink="/dashboard"></button>
-        <button pButton label="CV Editor" icon="pi pi-file-edit" class="p-button-text" routerLink="/cv"></button>
-        <button pButton label="Job Applications" icon="pi pi-briefcase" class="p-button-text" routerLink="/jobs"></button>
+    <!-- Navigation -->
+    <nav class="flex flex-col gap-1 px-3 pt-5 flex-1">
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest px-3 mb-2">Menu</p>
+
+      <a routerLink="/app/dashboard" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-th-large"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/app/cv" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-file-edit"></i>
+        <span>CV Editor</span>
+      </a>
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest px-3 mt-5 mb-2">Candidatures</p>
+
+      <a routerLink="/app/jobs/tracking" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-briefcase"></i>
+        <span>Mes candidatures</span>
+      </a>
+
+      <a routerLink="/app/jobs/letter" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-sparkles"></i>
+        <span>Lettre de motivation</span>
+        <span class="ml-auto text-xs font-bold px-1.5 py-0.5 rounded-md text-violet-600"
+              style="background:#ede9fe">IA</span>
+      </a>
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest px-3 mt-5 mb-2">Compte</p>
+
+      <a routerLink="/app/user/subscriptions" routerLinkActive="active" class="nav-item">
+        <i class="pi pi-crown"></i>
+        <span>Abonnement</span>
+      </a>
+    </nav>
+
+    <!-- Bottom: theme + user + logout -->
+    <div class="sidebar-bottom flex flex-col gap-1 px-3 pb-5 pt-4 border-t border-slate-100">
+      <button (click)="toggleTheme()"
+              pRipple
+              class="nav-item w-full border-0 bg-transparent">
+        <i [class]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"></i>
+        <span>{{ themeService.isDarkMode() ? 'Mode clair' : 'Mode sombre' }}</span>
+      </button>
+
+      <button (click)="logout()"
+              pRipple
+              class="nav-item w-full border-0 bg-transparent text-red-400 hover:bg-red-50 hover:text-red-600">
+        <i class="pi pi-sign-out"></i>
+        <span>Déconnexion</span>
+      </button>
+
+      <div class="flex items-center gap-3 px-3 pt-3 mt-1 border-t border-slate-100">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+             style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">
+          {{ userInitials }}
+        </div>
+        <div class="min-w-0">
+          <p class="text-sm font-semibold text-slate-800 truncate m-0">{{ user?.name || 'Utilisateur' }}</p>
+          <p class="text-xs text-slate-400 truncate m-0">{{ user?.email || '' }}</p>
+        </div>
       </div>
     </div>
+  </aside>
 
-    <div class="p-toolbar-group-end flex items-center gap-2">
-      <button pButton
-              (click)="toggleTheme()"
-              [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
-              class="p-button-rounded p-button-text"
-              pTooltip="Toggle Theme"
-              tooltipPosition="bottom"></button>
-      <button pButton icon="pi pi-user" class="p-button-rounded p-button-secondary" routerLink="/user"></button>
-    </div>
-  </p-toolbar>
-
-  <main class="flex-grow overflow-y-auto bg-gray-100 dark:bg-gray-800 dark:text-gray-100 p-4">
+  <!-- ── Main content ─────────────────────────────────────────── -->
+  <main class="flex-1 overflow-y-auto bg-slate-50">
     <router-outlet></router-outlet>
   </main>
+
 </div>

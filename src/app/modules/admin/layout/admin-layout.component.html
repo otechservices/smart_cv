@@ -1,0 +1,51 @@
+<div class="admin-shell">
+
+  <!-- ── Sidebar ────────────────────────────────────────────── -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-logo">
+      <div class="admin-logo-icon"><i class="pi pi-file-edit"></i></div>
+      <div>
+        <span class="admin-logo-name">SmartCV</span>
+        <span class="admin-logo-badge">Admin</span>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <p class="admin-nav-section">Gestion</p>
+
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="admin-nav-item">
+        <i class="pi pi-th-large"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/admin/users" routerLinkActive="active" class="admin-nav-item">
+        <i class="pi pi-users"></i>
+        <span>Utilisateurs</span>
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a routerLink="/app/dashboard" class="admin-nav-item">
+        <i class="pi pi-arrow-left"></i>
+        <span>Vue utilisateur</span>
+      </a>
+      <button (click)="logout()" class="admin-nav-item admin-logout">
+        <i class="pi pi-sign-out"></i>
+        <span>Déconnexion</span>
+      </button>
+      <div class="admin-user-info">
+        <div class="admin-avatar">{{ initials }}</div>
+        <div class="admin-user-meta">
+          <p class="admin-user-name">{{ user?.name }}</p>
+          <p class="admin-user-email">{{ user?.email }}</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Content ─────────────────────────────────────────────── -->
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

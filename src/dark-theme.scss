@@ -1,55 +1,39 @@
-/* Dark Theme Overrides: Applied when the 'dark-theme' class is on the body */
-
-// You can import a full PrimeNG dark theme here if you structure your themes that way,
-// or override CSS variables. For simplicity, we'll do some manual overrides.
-
+/* Dark theme applied via .dark-theme on <body> */
 .dark-theme {
-  // Base background and text color
-  background-color: #1f2937; // gray-800
-  color: #f9fafb; // gray-50
+  background-color: #0f172a;
+  color: #f1f5f9;
 
-  // Override for the main content area inside the layout
-  main {
-    background-color: #111827; // gray-900
-  }
+  main { background-color: #0f172a; }
 
-  // PrimeNG component overrides
-  .p-toolbar {
-    background: #1f2937;
-    border-bottom: 1px solid #374151; // gray-700
+  .p-toolbar { background: #1e293b; border-bottom-color: #334155; }
+  .p-toolbar .p-button.p-button-text { color: #cbd5e1; }
+  .p-card { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+  .p-card .p-card-title { color: #f1f5f9; }
+  .p-panel .p-panel-header { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+  .p-panel .p-panel-content { background: #1e293b; border-color: #334155; }
+  .p-fieldset { border-color: #334155; }
+  .p-fieldset .p-fieldset-legend { background: #1e293b; border-color: #334155; color: #818cf8; }
+  .p-inputtext, .p-inputtextarea { background: #1e293b; color: #f1f5f9; border-color: #334155; }
+  .p-datatable .p-datatable-thead > tr > th { background: #1e293b; color: #64748b; border-color: #334155; }
+  .p-datatable .p-datatable-tbody > tr > td { border-color: #1e293b; color: #cbd5e1; }
+  .p-datatable .p-datatable-tbody > tr > td { background: #0f172a; }
+  .p-datatable .p-datatable-tbody > tr:hover > td { background: #1a1238; }
 
-    .p-button.p-button-text {
-      color: #f9fafb;
-    }
-  }
+  .sidebar { background: #1e293b; border-right-color: #334155; }
+  .sidebar .sidebar-logo { border-bottom-color: #334155; }
+  .sidebar .sidebar-bottom { border-top-color: #334155; }
+  .nav-item { color: #94a3b8; }
+  .nav-item:hover { background: #334155; color: #e2e8f0; }
+  .nav-item.active { background: #1e1b4b; color: #818cf8; }
 
-  .p-card {
-    background: #374151; // gray-700
-    color: #f9fafb;
+  .page-header h1 { color: #f1f5f9; }
+  .page-header p { color: #94a3b8; }
 
-    .p-card-title, .p-card-subtitle {
-      color: #f9fafb;
-    }
-  }
+  .stat-card { border-color: #334155; }
 
-  .p-panel .p-panel-header {
-    background: #1f2937;
-    border-color: #374151;
-  }
-
-  .p-panel .p-panel-content {
-    background: #374151;
-    border-color: #374151;
-  }
-
-  // Form elements
-  .p-fieldset {
-    border-color: #374151;
-  }
-
-  .p-inputtext {
-    background: #4b5563; // gray-600
-    color: #f9fafb;
-    border-color: #374151;
-  }
+  .bg-white { background-color: #1e293b !important; }
+  .bg-slate-50, .bg-gray-50 { background-color: #1e293b !important; }
+  .text-gray-700, .text-slate-700 { color: #cbd5e1 !important; }
+  .text-gray-500, .text-slate-500 { color: #94a3b8 !important; }
+  .border-slate-200, .border-gray-200 { border-color: #334155 !important; }
 }

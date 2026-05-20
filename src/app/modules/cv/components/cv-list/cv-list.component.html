@@ -1,0 +1,57 @@
+<p-confirmDialog [style]="{ width: '420px' }"></p-confirmDialog>
+
+<div class="page-wrapper">
+  <div class="page-header flex items-start justify-between">
+    <div>
+      <h1>Mes CVs</h1>
+      <p>Créez et gérez plusieurs CVs adaptés à chaque offre.</p>
+    </div>
+    <button pButton pRipple label="Nouveau CV" icon="pi pi-plus"
+            class="btn-primary" (click)="newCv()"></button>
+  </div>
+
+  <!-- Skeleton -->
+  <div *ngIf="isLoading" class="cv-grid">
+    <div *ngFor="let i of [1,2,3]" class="cv-card cv-card-skeleton">
+      <p-skeleton height="48px" width="48px" borderRadius="12px"></p-skeleton>
+      <div class="flex flex-col gap-2 flex-1">
+        <p-skeleton height="1rem" width="60%"></p-skeleton>
+        <p-skeleton height="0.75rem" width="40%"></p-skeleton>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste -->
+  <div *ngIf="!isLoading && cvs.length > 0" class="cv-grid">
+    <div *ngFor="let cv of cvs" class="cv-card" (click)="open(cv)">
+      <div class="cv-card-avatar">{{ initials(cv.name) }}</div>
+      <div class="cv-card-body">
+        <p class="cv-card-title">{{ cv.title }}</p>
+        <p class="cv-card-sub">{{ cv.job_title || 'Poste non renseigné' }}</p>
+        <p class="cv-card-date">
+          <i class="pi pi-clock"></i>
+          {{ timeAgo(cv.updated_at) }}
+        </p>
+      </div>
+      <div class="cv-card-actions">
+        <button pButton pRipple icon="pi pi-pencil"
+                class="btn-ghost p-button-rounded p-button-sm"
+                pTooltip="Modifier" tooltipPosition="top"
+                (click)="open(cv); $event.stopPropagation()"></button>
+        <button pButton pRipple icon="pi pi-trash"
+                class="btn-danger-ghost p-button-rounded p-button-sm"
+                pTooltip="Supprimer" tooltipPosition="top"
+                (click)="confirmDelete(cv, $event)"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && cvs.length === 0" class="cv-empty-state">
+    <i class="pi pi-file-edit"></i>
+    <h3>Aucun CV pour l'instant</h3>
+    <p>Créez votre premier CV et commencez à postuler.</p>
+    <button pButton pRipple label="Créer mon premier CV" icon="pi pi-plus"
+            class="btn-primary" (click)="newCv()"></button>
+  </div>
+</div>

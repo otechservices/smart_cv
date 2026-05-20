@@ -1,51 +1,175 @@
-<div class="p-4">
-  <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+<div class="page-wrapper">
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <p-card>
-      <ng-template pTemplate="title">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-file text-2xl text-blue-500"></i>
-          <span class="font-bold">CVs Created</span>
-        </div>
-      </ng-template>
-      <div class="text-4xl font-bold text-center text-blue-500">{{ stats.cvsCreated }}</div>
-    </p-card>
-
-    <p-card>
-      <ng-template pTemplate="title">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-envelope text-2xl text-orange-500"></i>
-          <span class="font-bold">Letters Generated</span>
-        </div>
-      </ng-template>
-      <div class="text-4xl font-bold text-center text-orange-500">{{ stats.lettersGenerated }}</div>
-    </p-card>
-
-    <p-card>
-      <ng-template pTemplate="title">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-send text-2xl text-purple-500"></i>
-          <span class="font-bold">Applications Sent</span>
-        </div>
-      </ng-template>
-      <div class="text-4xl font-bold text-center text-purple-500">{{ stats.applicationsSent }}</div>
-    </p-card>
-
-    <p-card>
-      <ng-template pTemplate="title">
-        <div class="flex items-center gap-2">
-          <i class="pi pi-check-circle text-2xl text-green-500"></i>
-          <span class="font-bold">Successful</span>
-        </div>
-      </ng-template>
-      <div class="text-4xl font-bold text-center text-green-500">{{ stats.applicationsSuccessful }}</div>
-    </p-card>
+  <!-- Header -->
+  <div class="page-header flex items-start justify-between">
+    <div>
+      <h1>Bonjour 👋</h1>
+      <p>Voici un résumé de votre activité sur CV Master.</p>
+    </div>
+    <a pButton pRipple
+       routerLink="/cv"
+       icon="pi pi-plus"
+       label="Créer un CV"
+       class="btn-primary p-button-sm"></a>
   </div>
 
-  <div class="mt-8">
-    <p-panel header="Recent Activity">
-      <p class="text-gray-600">Your recent job applications and CV updates will appear here.</p>
-    </p-panel>
+  <!-- Stat cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+
+    <div class="stat-card bg-white border border-slate-100">
+      <div class="stat-icon bg-indigo-50 text-indigo-500">
+        <i class="pi pi-file"></i>
+      </div>
+      <div class="stat-value text-indigo-600">{{ stats.cvsCreated }}</div>
+      <div class="stat-label text-slate-500">CVs créés</div>
+    </div>
+
+    <div class="stat-card bg-white border border-slate-100">
+      <div class="stat-icon bg-violet-50 text-violet-500">
+        <i class="pi pi-envelope"></i>
+      </div>
+      <div class="stat-value text-violet-600">{{ stats.lettersGenerated }}</div>
+      <div class="stat-label text-slate-500">Lettres générées</div>
+    </div>
+
+    <div class="stat-card bg-white border border-slate-100">
+      <div class="stat-icon bg-blue-50 text-blue-500">
+        <i class="pi pi-send"></i>
+      </div>
+      <div class="stat-value text-blue-600">{{ stats.applicationsSent }}</div>
+      <div class="stat-label text-slate-500">Candidatures envoyées</div>
+    </div>
+
+    <div class="stat-card bg-white border border-slate-100">
+      <div class="stat-icon bg-emerald-50 text-emerald-500">
+        <i class="pi pi-check-circle"></i>
+      </div>
+      <div class="stat-value text-emerald-600">{{ stats.applicationsSuccessful }}</div>
+      <div class="stat-label text-slate-500">Offres reçues</div>
+    </div>
+
+  </div>
+
+  <!-- Bottom grid: quick actions + activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Quick Actions -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-2xl border border-slate-100 p-6">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">Actions rapides</h2>
+
+        <div class="flex flex-col gap-2">
+          <a routerLink="/cv"
+             class="flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-50 transition-colors cursor-pointer group">
+            <div class="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-200 transition-colors">
+              <i class="pi pi-file-edit text-sm"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-800 m-0">Nouveau CV</p>
+              <p class="text-xs text-slate-400 m-0">Créer ou modifier votre CV</p>
+            </div>
+            <i class="pi pi-chevron-right text-xs text-slate-300 ml-auto"></i>
+          </a>
+
+          <a routerLink="/jobs/letter"
+             class="flex items-center gap-3 p-3 rounded-xl hover:bg-violet-50 transition-colors cursor-pointer group">
+            <div class="w-9 h-9 rounded-lg bg-violet-100 flex items-center justify-center text-violet-600 group-hover:bg-violet-200 transition-colors">
+              <i class="pi pi-sparkles text-sm"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-800 m-0">Générer une lettre</p>
+              <p class="text-xs text-slate-400 m-0">Assisté par intelligence artificielle</p>
+            </div>
+            <i class="pi pi-chevron-right text-xs text-slate-300 ml-auto"></i>
+          </a>
+
+          <a routerLink="/jobs/tracking"
+             class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors cursor-pointer group">
+            <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-200 transition-colors">
+              <i class="pi pi-briefcase text-sm"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-800 m-0">Mes candidatures</p>
+              <p class="text-xs text-slate-400 m-0">Suivre vos démarches</p>
+            </div>
+            <i class="pi pi-chevron-right text-xs text-slate-300 ml-auto"></i>
+          </a>
+
+          <a routerLink="/user/subscriptions"
+             class="flex items-center gap-3 p-3 rounded-xl hover:bg-amber-50 transition-colors cursor-pointer group">
+            <div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600 group-hover:bg-amber-200 transition-colors">
+              <i class="pi pi-crown text-sm"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-slate-800 m-0">Passer à Premium</p>
+              <p class="text-xs text-slate-400 m-0">Débloquer toutes les fonctions</p>
+            </div>
+            <i class="pi pi-chevron-right text-xs text-slate-300 ml-auto"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity feed -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-2xl border border-slate-100 p-6 h-full">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-widest mb-5">Activité récente</h2>
+
+        <div class="flex flex-col gap-4">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500 shrink-0 mt-0.5">
+              <i class="pi pi-file text-xs"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-slate-800 m-0">CV <span class="font-semibold">"Développeur Full-Stack"</span> créé</p>
+              <p class="text-xs text-slate-400 m-0 mt-0.5">Il y a 2 heures</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center text-violet-500 shrink-0 mt-0.5">
+              <i class="pi pi-sparkles text-xs"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-slate-800 m-0">Lettre générée pour <span class="font-semibold">Innovatech</span></p>
+              <p class="text-xs text-slate-400 m-0 mt-0.5">Hier à 14h30</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-500 shrink-0 mt-0.5">
+              <i class="pi pi-check text-xs"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-slate-800 m-0">Entretien obtenu chez <span class="font-semibold">Cloud Corp</span></p>
+              <p class="text-xs text-slate-400 m-0 mt-0.5">Il y a 3 jours</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 shrink-0 mt-0.5">
+              <i class="pi pi-send text-xs"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-slate-800 m-0">Candidature envoyée chez <span class="font-semibold">Future Solutions</span></p>
+              <p class="text-xs text-slate-400 m-0 mt-0.5">Il y a 5 jours</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="mt-6 pt-5 border-t border-slate-100">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-semibold text-slate-500">Objectif mensuel</span>
+            <span class="text-xs font-bold text-indigo-600">{{ stats.applicationsSent }}/20 candidatures</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2">
+            <div class="h-2 rounded-full"
+                 style="background: linear-gradient(90deg, #6366f1, #8b5cf6); width: 40%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

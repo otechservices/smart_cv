@@ -1,4 +1,2 @@
-/* Styles for LetterComponent */
-:host ::ng-deep .p-panel-content {
-    min-height: 450px;
-}
+:host { display: block; }
+.letter-body { font-family: 'Inter', sans-serif; }

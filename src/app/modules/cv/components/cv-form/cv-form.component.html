@@ -1,107 +1,258 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4">
+<div class="page-wrapper">
+  <div class="page-header flex items-start justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <button pButton pRipple icon="pi pi-arrow-left"
+              class="p-button-text p-button-sm text-slate-500"
+              (click)="goBack()"></button>
+      <div>
+        <input pInputText [formControl]="titleControl"
+               placeholder="Titre du CV (ex. CV Dev Frontend)"
+               class="cv-title-input">
+        <p class="text-xs text-slate-400 mt-1 m-0">Prévisualisation en temps réel</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 shrink-0">
 
-  <!-- Left Column: The Form -->
-  <div class="lg:col-span-1">
-    <div class="bg-gray-50 p-4 rounded-lg shadow">
-      <h2 class="text-2xl font-bold mb-6 text-center text-gray-700">CV Editor</h2>
-      <form [formGroup]="cvForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Indicateur auto-save -->
+      <span *ngIf="saveStatus === 'saving'" class="save-indicator saving">
+        <i class="pi pi-spin pi-spinner"></i> Sauvegarde…
+      </span>
+      <span *ngIf="saveStatus === 'saved'" class="save-indicator saved">
+        <i class="pi pi-check-circle"></i> Enregistré
+      </span>
+      <span *ngIf="saveStatus === 'error'" class="save-indicator error">
+        <i class="pi pi-exclamation-circle"></i> Erreur
+      </span>
 
-        <!-- Personal Information -->
-        <p-fieldset legend="Personal Information" [toggleable]="true">
-          <div formGroupName="personalInfo" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="flex flex-col">
-              <label for="name" class="font-semibold mb-1">Full Name</label>
-              <input id="name" type="text" pInputText formControlName="name">
-            </div>
-            <div class="flex flex-col">
-              <label for="jobTitle" class="font-semibold mb-1">Job Title</label>
-              <input id="jobTitle" type="text" pInputText formControlName="jobTitle">
-            </div>
-            <div class="flex flex-col">
-              <label for="email" class="font-semibold mb-1">Email</label>
-              <input id="email" type="email" pInputText formControlName="email">
-            </div>
-            <div class="flex flex-col">
-              <label for="phone" class="font-semibold mb-1">Phone</label>
-              <input id="phone" type="text" pInputText formControlName="phone">
-            </div>
-            <div class="flex flex-col md:col-span-2">
-              <label for="address" class="font-semibold mb-1">Address</label>
-              <input id="address" type="text" pInputText formControlName="address">
-            </div>
-          </div>
-        </p-fieldset>
-
-        <!-- Professional Summary -->
-        <p-fieldset legend="Professional Summary" [toggleable]="true">
-          <textarea pInputTextarea formControlName="professionalSummary" [rows]="5" class="w-full" placeholder="Write a short summary about your professional background..."></textarea>
-        </p-fieldset>
-
-        <!-- Experiences -->
-        <p-fieldset legend="Work Experience" [toggleable]="true">
-          <div formArrayName="experiences">
-            <div *ngFor="let exp of experiences.controls; let i=index" [formGroupName]="i" class="mb-4 p-4 border rounded-lg bg-white relative">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" pInputText placeholder="Company" formControlName="company">
-                <input type="text" pInputText placeholder="Position" formControlName="position">
-                <input type="text" pInputText placeholder="Start Date (e.g., 2020-01)" formControlName="startDate">
-                <input type="text" pInputText placeholder="End Date (e.g., 2022-12 or Present)" formControlName="endDate">
-                <textarea pInputTextarea placeholder="Description of your role and achievements" formControlName="description" [rows]="3" class="w-full md:col-span-2"></textarea>
-              </div>
-              <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-sm absolute top-2 right-2" (click)="removeExperience(i)"></button>
-            </div>
-            <button pButton type="button" label="Add Experience" icon="pi pi-plus" class="p-button-secondary" (click)="addExperience()"></button>
-          </div>
-        </p-fieldset>
-
-        <!-- Educations -->
-        <p-fieldset legend="Education" [toggleable]="true">
-          <div formArrayName="educations">
-            <div *ngFor="let edu of educations.controls; let i=index" [formGroupName]="i" class="mb-4 p-4 border rounded-lg bg-white relative">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" pInputText placeholder="Institution" formControlName="institution" class="md:col-span-2">
-                <input type="text" pInputText placeholder="Degree or Certificate" formControlName="degree">
-                <input type="text" pInputText placeholder="End Date" formControlName="endDate">
-              </div>
-              <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-sm absolute top-2 right-2" (click)="removeEducation(i)"></button>
-            </div>
-            <button pButton type="button" label="Add Education" icon="pi pi-plus" class="p-button-secondary" (click)="addEducation()"></button>
-          </div>
-        </p-fieldset>
-
-        <!-- Skills & Languages -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <p-fieldset legend="Skills">
-              <div formArrayName="skills">
-                  <div *ngFor="let skill of skills.controls; let i=index" [formGroupName]="i" class="mb-2 flex items-center gap-2">
-                      <input type="text" pInputText placeholder="e.g., Angular, Project Management" formControlName="name" class="flex-grow">
-                      <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-text" (click)="removeSkill(i)"></button>
-                  </div>
-                  <button pButton type="button" label="Add Skill" icon="pi pi-plus" class="p-button-secondary p-button-sm mt-2" (click)="addSkill()"></button>
-              </div>
-          </p-fieldset>
-          <p-fieldset legend="Languages">
-              <div formArrayName="languages">
-                  <div *ngFor="let lang of languages.controls; let i=index" [formGroupName]="i" class="mb-2 flex items-center gap-2">
-                      <input type="text" pInputText placeholder="e.g., French" formControlName="name" class="w-1/2">
-                      <input type="text" pInputText placeholder="e.g., Native" formControlName="proficiency" class="w-1/2">
-                      <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-text" (click)="removeLanguage(i)"></button>
-                  </div>
-                  <button pButton type="button" label="Add Language" icon="pi pi-plus" class="p-button-secondary p-button-sm mt-2" (click)="addLanguage()"></button>
-              </div>
-          </p-fieldset>
-        </div>
-
-        <div class="text-right mt-6">
-          <button pButton type="submit" label="Save CV" [disabled]="cvForm.invalid" class="p-button-success"></button>
-        </div>
-      </form>
+      <button pButton pRipple type="button"
+              label="Exporter PDF" icon="pi pi-download"
+              class="btn-secondary p-button-sm"
+              (click)="onExportPdf()"></button>
+      <button pButton pRipple type="button"
+              label="Enregistrer" icon="pi pi-save"
+              class="btn-primary p-button-sm"
+              [loading]="isSaving"
+              (click)="onSave()"></button>
     </div>
   </div>
 
-  <!-- Right Column: The Preview -->
-  <div class="lg:col-span-1">
-    <app-cv-preview [cvData]="cvData$ | async"></app-cv-preview>
-  </div>
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
+    <!-- ── Colonne gauche : formulaire ──────────────────────── -->
+    <div class="flex flex-col gap-4">
+      <form [formGroup]="cvForm" (ngSubmit)="onSave()">
+
+        <!-- Informations personnelles -->
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
+          <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+              <i class="pi pi-user text-sm"></i>
+            </div>
+            <span class="font-semibold text-slate-800 text-sm">Informations personnelles</span>
+          </div>
+          <div formGroupName="personalInfo" class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="field">
+              <label class="field-label">Nom complet <span class="field-required">*</span></label>
+              <input pInputText formControlName="name" placeholder="ex. Alice Martin" class="w-full"
+                     [ngClass]="{'ng-invalid ng-dirty': cvForm.get('personalInfo.name')?.invalid && cvForm.get('personalInfo.name')?.touched}">
+              <small class="field-error" *ngIf="cvForm.get('personalInfo.name')?.invalid && cvForm.get('personalInfo.name')?.touched">
+                Le nom est requis.
+              </small>
+            </div>
+            <div class="field">
+              <label class="field-label">Titre du poste <span class="field-required">*</span></label>
+              <input pInputText formControlName="jobTitle" placeholder="ex. Développeur Front-End" class="w-full"
+                     [ngClass]="{'ng-invalid ng-dirty': cvForm.get('personalInfo.jobTitle')?.invalid && cvForm.get('personalInfo.jobTitle')?.touched}">
+              <small class="field-error" *ngIf="cvForm.get('personalInfo.jobTitle')?.invalid && cvForm.get('personalInfo.jobTitle')?.touched">
+                Le titre est requis.
+              </small>
+            </div>
+            <div class="field">
+              <label class="field-label">Email <span class="field-required">*</span></label>
+              <input pInputText type="email" formControlName="email" placeholder="alice@email.com" class="w-full"
+                     [ngClass]="{'ng-invalid ng-dirty': cvForm.get('personalInfo.email')?.invalid && cvForm.get('personalInfo.email')?.touched}">
+              <small class="field-error" *ngIf="cvForm.get('personalInfo.email')?.hasError('required') && cvForm.get('personalInfo.email')?.touched">
+                L'email est requis.
+              </small>
+              <small class="field-error" *ngIf="cvForm.get('personalInfo.email')?.hasError('email') && cvForm.get('personalInfo.email')?.touched">
+                Format d'email invalide.
+              </small>
+            </div>
+            <div class="field">
+              <label class="field-label">Téléphone</label>
+              <input pInputText formControlName="phone" placeholder="+33 6 00 00 00 00" class="w-full">
+            </div>
+            <div class="field md:col-span-2">
+              <label class="field-label">Adresse</label>
+              <input pInputText formControlName="address" placeholder="Paris, France" class="w-full">
+            </div>
+          </div>
+        </div>
+
+        <!-- Résumé professionnel -->
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
+          <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+            <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center text-violet-600">
+              <i class="pi pi-align-left text-sm"></i>
+            </div>
+            <span class="font-semibold text-slate-800 text-sm">Résumé professionnel</span>
+          </div>
+          <div class="p-5 field">
+            <quill-editor formControlName="professionalSummary"
+                          [modules]="quillModules"
+                          placeholder="Rédigez un court paragraphe sur votre profil, vos compétences clés et vos objectifs professionnels..."
+                          [styles]="{ 'min-height': '140px', 'font-family': 'Inter, sans-serif', 'font-size': '0.875rem' }"
+                          class="quill-field"
+                          [ngClass]="{'quill-invalid': cvForm.get('professionalSummary')?.invalid && cvForm.get('professionalSummary')?.touched}">
+            </quill-editor>
+            <small class="field-error" *ngIf="cvForm.get('professionalSummary')?.invalid && cvForm.get('professionalSummary')?.touched">
+              Le résumé professionnel est requis.
+            </small>
+          </div>
+        </div>
+
+        <!-- Expériences -->
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                <i class="pi pi-briefcase text-sm"></i>
+              </div>
+              <span class="font-semibold text-slate-800 text-sm">Expériences professionnelles</span>
+            </div>
+            <button pButton type="button" icon="pi pi-plus" label="Ajouter"
+                    class="p-button-text p-button-sm text-indigo-600 hover:bg-indigo-50"
+                    (click)="addExperience()"></button>
+          </div>
+          <div class="p-5 flex flex-col gap-4" formArrayName="experiences">
+            <div *ngIf="experiences.length === 0" class="text-center py-6 text-slate-400 text-sm">
+              <i class="pi pi-briefcase text-2xl block mb-2 opacity-30"></i>
+              Aucune expérience ajoutée. Cliquez sur "Ajouter".
+            </div>
+            <div *ngFor="let exp of experiences.controls; let i=index" [formGroupName]="i"
+                 class="p-4 rounded-xl border border-slate-200 bg-slate-50 relative">
+              <button pButton type="button" icon="pi pi-trash"
+                      class="p-button-rounded p-button-text p-button-danger p-button-sm absolute top-3 right-3"
+                      (click)="removeExperience(i)"></button>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pr-8">
+                <input pInputText placeholder="Entreprise" formControlName="company" class="bg-white">
+                <input pInputText placeholder="Poste" formControlName="position" class="bg-white">
+                <input pInputText placeholder="Début (ex. Jan 2020)" formControlName="startDate" class="bg-white">
+                <input pInputText placeholder="Fin (ex. Déc 2022 ou Présent)" formControlName="endDate" class="bg-white">
+                <quill-editor formControlName="description"
+                              [modules]="quillSimple"
+                              placeholder="Description du poste et réalisations..."
+                              [styles]="{ 'min-height': '80px', 'font-family': 'Inter, sans-serif', 'font-size': '0.8125rem', 'background': '#fff' }"
+                              class="quill-field md:col-span-2 bg-white">
+                </quill-editor>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formation -->
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <i class="pi pi-graduation-cap text-sm"></i>
+              </div>
+              <span class="font-semibold text-slate-800 text-sm">Formation</span>
+            </div>
+            <button pButton type="button" icon="pi pi-plus" label="Ajouter"
+                    class="p-button-text p-button-sm text-indigo-600 hover:bg-indigo-50"
+                    (click)="addEducation()"></button>
+          </div>
+          <div class="p-5 flex flex-col gap-4" formArrayName="educations">
+            <div *ngIf="educations.length === 0" class="text-center py-6 text-slate-400 text-sm">
+              <i class="pi pi-graduation-cap text-2xl block mb-2 opacity-30"></i>
+              Aucune formation ajoutée.
+            </div>
+            <div *ngFor="let edu of educations.controls; let i=index" [formGroupName]="i"
+                 class="p-4 rounded-xl border border-slate-200 bg-slate-50 relative">
+              <button pButton type="button" icon="pi pi-trash"
+                      class="p-button-rounded p-button-text p-button-danger p-button-sm absolute top-3 right-3"
+                      (click)="removeEducation(i)"></button>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pr-8">
+                <input pInputText placeholder="Établissement" formControlName="institution" class="md:col-span-2 bg-white">
+                <input pInputText placeholder="Diplôme / Certification" formControlName="degree" class="bg-white">
+                <input pInputText placeholder="Année d'obtention" formControlName="endDate" class="bg-white">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compétences & Langues -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+          <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600">
+                  <i class="pi pi-star text-sm"></i>
+                </div>
+                <span class="font-semibold text-slate-800 text-sm">Compétences</span>
+              </div>
+              <button pButton type="button" icon="pi pi-plus"
+                      class="p-button-rounded p-button-text p-button-sm text-indigo-600"
+                      (click)="addSkill()"></button>
+            </div>
+            <div class="p-4 flex flex-col gap-2" formArrayName="skills">
+              <div *ngFor="let skill of skills.controls; let i=index" [formGroupName]="i"
+                   class="flex items-center gap-2">
+                <input pInputText formControlName="name" placeholder="ex. React" class="flex-1 text-sm">
+                <button pButton type="button" icon="pi pi-times"
+                        class="p-button-rounded p-button-text p-button-danger p-button-sm shrink-0"
+                        (click)="removeSkill(i)"></button>
+              </div>
+              <p *ngIf="skills.length === 0" class="text-xs text-slate-400 text-center py-3 m-0">Aucune compétence</p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center text-pink-600">
+                  <i class="pi pi-globe text-sm"></i>
+                </div>
+                <span class="font-semibold text-slate-800 text-sm">Langues</span>
+              </div>
+              <button pButton type="button" icon="pi pi-plus"
+                      class="p-button-rounded p-button-text p-button-sm text-indigo-600"
+                      (click)="addLanguage()"></button>
+            </div>
+            <div class="p-4 flex flex-col gap-2" formArrayName="languages">
+              <div *ngFor="let lang of languages.controls; let i=index" [formGroupName]="i"
+                   class="flex items-center gap-2">
+                <input pInputText formControlName="name" placeholder="Langue" class="w-2/5 text-sm">
+                <input pInputText formControlName="proficiency" placeholder="Niveau" class="flex-1 text-sm">
+                <button pButton type="button" icon="pi pi-times"
+                        class="p-button-rounded p-button-text p-button-danger p-button-sm shrink-0"
+                        (click)="removeLanguage(i)"></button>
+              </div>
+              <p *ngIf="languages.length === 0" class="text-xs text-slate-400 text-center py-3 m-0">Aucune langue</p>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ── Colonne droite : aperçu ────────────────────────────── -->
+    <div class="xl:sticky xl:top-6 xl:self-start">
+      <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+          <div class="flex items-center gap-2 text-slate-600 font-semibold text-sm">
+            <i class="pi pi-eye text-indigo-500"></i>
+            Aperçu en direct
+          </div>
+          <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-md">A4</span>
+        </div>
+        <div class="overflow-auto max-h-screen">
+          <app-cv-preview [cvData]="cvData$ | async"></app-cv-preview>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

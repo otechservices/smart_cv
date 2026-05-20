@@ -1,40 +1,164 @@
-<div class="p-4">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Job Application Tracking</h1>
-    <button pButton label="Add Application" icon="pi pi-plus"></button>
+<div class="page-wrapper">
+
+  <div class="page-header flex items-start justify-between">
+    <div>
+      <h1>Mes candidatures</h1>
+      <p>Suivez l'avancement de toutes vos démarches en un seul endroit.</p>
+    </div>
+    <button pButton pRipple label="Nouvelle candidature" icon="pi pi-plus"
+            class="btn-primary"
+            (click)="openDialog()"></button>
   </div>
 
-  <p-card>
-    <p-table [value]="applications" [paginator]="true" [rows]="5" [showCurrentPageReport]="true" responsiveLayout="scroll"
-             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+  <!-- Stats rapides -->
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+    <div *ngFor="let s of statusStats"
+         class="bg-white rounded-xl border border-slate-100 px-4 py-3 flex items-center gap-3 cursor-pointer hover:shadow-medium transition-shadow">
+      <div class="w-2.5 h-2.5 rounded-full shrink-0" [style.background]="s.color"></div>
+      <div>
+        <p class="text-lg font-bold m-0" [style.color]="s.color">{{ s.count }}</p>
+        <p class="text-xs text-slate-400 m-0">{{ s.label }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table card -->
+  <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+
+    <!-- Search bar -->
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+      <div class="p-input-icon-left" style="width:240px">
+        <i class="pi pi-search"></i>
+        <input pInputText placeholder="Rechercher..." class="w-full">
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-400">{{ applications.length }} candidatures</span>
+      </div>
+    </div>
+
+    <p-table [value]="applications" [paginator]="true" [rows]="8"
+             [showCurrentPageReport]="true"
+             currentPageReportTemplate="{first}-{last} sur {totalRecords}"
+             responsiveLayout="scroll">
+
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="company">Company <p-sortIcon field="company"></p-sortIcon></th>
-          <th pSortableColumn="title">Job Title <p-sortIcon field="title"></p-sortIcon></th>
-          <th pSortableColumn="date">Date Applied <p-sortIcon field="date"></p-sortIcon></th>
-          <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
-          <th>Actions</th>
+          <th pSortableColumn="company">
+            Entreprise <p-sortIcon field="company"></p-sortIcon>
+          </th>
+          <th pSortableColumn="title">
+            Poste <p-sortIcon field="title"></p-sortIcon>
+          </th>
+          <th pSortableColumn="date">
+            Date <p-sortIcon field="date"></p-sortIcon>
+          </th>
+          <th pSortableColumn="status">
+            Statut <p-sortIcon field="status"></p-sortIcon>
+          </th>
+          <th class="text-center">Actions</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-app>
+
+      <ng-template pTemplate="body" let-app let-rowIndex="rowIndex">
         <tr>
-          <td>{{app.company}}</td>
-          <td>{{app.title}}</td>
-          <td>{{app.date | date: 'mediumDate'}}</td>
           <td>
-            <p-tag [value]="app.status" [severity]="getStatusSeverity(app.status)"></p-tag>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shrink-0"
+                   style="background: linear-gradient(135deg,#6366f1,#8b5cf6)">
+                {{ app.company.charAt(0) }}
+              </div>
+              <span class="font-semibold text-slate-800 text-sm">{{ app.company }}</span>
+            </div>
+          </td>
+          <td class="text-slate-600 text-sm">{{ app.title }}</td>
+          <td class="text-slate-400 text-sm">{{ app.date | date:'dd MMM yyyy' }}</td>
+          <td>
+            <p-tag [value]="getStatusLabel(app.status)"
+                   [severity]="getStatusSeverity(app.status)"
+                   [style]="getStatusStyle(app.status)">
+            </p-tag>
           </td>
           <td>
-            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
-            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"></button>
+            <div class="flex items-center justify-center gap-0.5">
+              <button pButton pRipple icon="pi pi-pencil"
+                      class="btn-ghost p-button-rounded p-button-sm"
+                      pTooltip="Modifier" tooltipPosition="top"></button>
+              <button pButton pRipple icon="pi pi-external-link"
+                      class="btn-ghost p-button-rounded p-button-sm"
+                      pTooltip="Voir l'offre" tooltipPosition="top"></button>
+              <button pButton pRipple icon="pi pi-trash"
+                      class="btn-danger-ghost p-button-rounded p-button-sm"
+                      pTooltip="Supprimer" tooltipPosition="top"
+                      (click)="removeApplication(rowIndex)"></button>
+            </div>
           </td>
         </tr>
       </ng-template>
-       <ng-template pTemplate="emptymessage">
+
+      <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="5" class="text-center">No applications found.</td>
+          <td colspan="5">
+            <div class="text-center py-12">
+              <i class="pi pi-briefcase text-4xl text-slate-200 block mb-3"></i>
+              <p class="text-slate-400 text-sm m-0">Aucune candidature pour le moment.</p>
+              <p class="text-slate-300 text-xs mt-1 m-0">Cliquez sur "Nouvelle candidature" pour commencer.</p>
+            </div>
+          </td>
         </tr>
-    </ng-template>
+      </ng-template>
+
     </p-table>
-  </p-card>
+  </div>
 </div>
+
+<!-- ── Dialog : nouvelle candidature ──────────────────────── -->
+<p-dialog header="Nouvelle candidature" [(visible)]="showDialog"
+          [modal]="true" [closable]="true" [draggable]="false"
+          [style]="{ width: '480px' }" styleClass="rounded-dialog">
+
+  <form [formGroup]="appForm" (ngSubmit)="saveApplication()" class="flex flex-col gap-4 pt-2">
+
+    <div class="field">
+      <label class="field-label">Entreprise <span class="field-required">*</span></label>
+      <input pInputText formControlName="company" placeholder="ex. Acme Corp" class="w-full"
+             [ngClass]="{'ng-invalid ng-dirty': appForm.get('company')?.invalid && appForm.get('company')?.touched}">
+      <small class="field-error" *ngIf="appForm.get('company')?.invalid && appForm.get('company')?.touched">
+        L'entreprise est requise.
+      </small>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Poste <span class="field-required">*</span></label>
+      <input pInputText formControlName="title" placeholder="ex. Développeur Frontend" class="w-full"
+             [ngClass]="{'ng-invalid ng-dirty': appForm.get('title')?.invalid && appForm.get('title')?.touched}">
+      <small class="field-error" *ngIf="appForm.get('title')?.invalid && appForm.get('title')?.touched">
+        Le poste est requis.
+      </small>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="field">
+        <label class="field-label">Date <span class="field-required">*</span></label>
+        <input pInputText type="date" formControlName="date" class="w-full"
+               [ngClass]="{'ng-invalid ng-dirty': appForm.get('date')?.invalid && appForm.get('date')?.touched}">
+      </div>
+      <div class="field">
+        <label class="field-label">Statut <span class="field-required">*</span></label>
+        <p-dropdown formControlName="status" [options]="statusOptions"
+                    optionLabel="label" optionValue="value"
+                    styleClass="w-full"></p-dropdown>
+      </div>
+    </div>
+
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Annuler" icon="pi pi-times"
+            class="btn-secondary p-button-sm"
+            (click)="showDialog = false"></button>
+    <button pButton label="Enregistrer" icon="pi pi-check"
+            class="btn-primary p-button-sm"
+            [loading]="isSaving"
+            (click)="saveApplication()"></button>
+  </ng-template>
+</p-dialog>

@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_URL } from '../config/api.config';
+import { ApiResponse, Plan } from '../interfaces/api.interfaces';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SubscriptionService {
+  private readonly url = `${API_URL}/subscriptions`;
 
-  private apiUrl = 'http://localhost:8000/api';
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  // Example method
-  getSubscriptions(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/subscriptions`);
+  getPlans(): Observable<ApiResponse<Plan[]>> {
+    return this.http.get<ApiResponse<Plan[]>>(this.url);
   }
 }

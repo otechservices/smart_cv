@@ -5,9 +5,11 @@ import { UserRoutingModule } from './user-routing.module';
 import { SubscriptionComponent } from './components/subscription/subscription.component';
 
 // PrimeNG
-import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-
+import { RippleModule } from 'primeng/ripple';
+import { TagModule } from 'primeng/tag';
+import { BadgeModule } from 'primeng/badge';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @NgModule({
   declarations: [
@@ -16,8 +18,11 @@ import { ButtonModule } from 'primeng/button';
   imports: [
     CommonModule,
     UserRoutingModule,
-    CardModule,
-    ButtonModule
+    ButtonModule,
+    RippleModule,
+    TagModule,
+    BadgeModule,
+    SkeletonModule,
   ]
 })
 export class UserModule { }

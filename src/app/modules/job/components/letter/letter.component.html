@@ -1,43 +1,127 @@
-<div class="p-4">
-  <h1 class="text-3xl font-bold mb-6">Cover Letter Generator</h1>
+<div class="page-wrapper">
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <!-- Left: Form for input -->
-    <div>
-      <form [formGroup]="letterForm" (ngSubmit)="generateLetter()">
-        <p-panel header="Job Details">
-          <div class="flex flex-col gap-4">
-            <div>
-              <label for="cvId" class="font-semibold mb-2 block">Select CV to use as reference</label>
-              <!-- This would be a p-dropdown in a real scenario -->
-              <input pInputText placeholder="Dropdown to select a CV" class="w-full">
+  <div class="page-header">
+    <h1>Générateur de lettre de motivation</h1>
+    <p>Décrivez le poste et laissez l'IA rédiger une lettre personnalisée en quelques secondes.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- ── Panneau gauche : formulaire ──────────────────────── -->
+    <div class="flex flex-col gap-5">
+
+      <!-- Bannière IA -->
+      <div class="rounded-2xl p-5 flex items-start gap-4"
+           style="background: linear-gradient(135deg, #eef2ff 0%, #ede9fe 100%); border: 1px solid #c7d2fe;">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+             style="background: linear-gradient(135deg,#6366f1,#8b5cf6)">
+          <i class="pi pi-sparkles text-white text-base"></i>
+        </div>
+        <div>
+          <p class="font-semibold text-slate-800 text-sm m-0">Rédaction assistée par IA</p>
+          <p class="text-xs text-slate-500 mt-0.5 m-0 leading-relaxed">
+            Collez la description du poste ci-dessous. L'IA analysera les exigences et adaptera la lettre à votre profil.
+          </p>
+        </div>
+      </div>
+
+      <form [formGroup]="letterForm" (ngSubmit)="generateLetter()" class="flex flex-col gap-4">
+
+        <!-- Sélection CV -->
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+            <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+              <i class="pi pi-file text-sm"></i>
             </div>
-            <div>
-              <label for="jobDescription" class="font-semibold mb-2 block">Paste Job Description</label>
-              <textarea id="jobDescription" pInputTextarea formControlName="jobDescription" [rows]="15" class="w-full" placeholder="Paste the full job description..."></textarea>
-            </div>
+            <span class="font-semibold text-slate-800 text-sm">CV de référence</span>
           </div>
-          <ng-template pTemplate="footer">
-            <div class="flex justify-end">
-              <button pButton type="submit" label="Generate Letter" icon="pi pi-sparkles" [loading]="isLoading"></button>
+          <div class="p-5">
+            <input pInputText placeholder="Sélectionner un CV (bientôt disponible)" class="w-full" disabled>
+            <p class="text-xs text-slate-400 mt-2 m-0">
+              <i class="pi pi-info-circle mr-1"></i>La sélection du CV sera disponible prochainement.
+            </p>
+          </div>
+        </div>
+
+        <!-- Description du poste -->
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+            <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center text-violet-600">
+              <i class="pi pi-align-left text-sm"></i>
             </div>
-          </ng-template>
-        </p-panel>
+            <span class="font-semibold text-slate-800 text-sm">Description du poste *</span>
+          </div>
+          <div class="p-5 field">
+            <quill-editor formControlName="jobDescription"
+                          [modules]="quillModules"
+                          placeholder="Collez ici la description complète du poste (titre, missions, compétences requises, entreprise...)"
+                          [styles]="{ 'min-height': '220px', 'font-family': 'Inter, sans-serif', 'font-size': '0.875rem' }"
+                          class="quill-field"
+                          [ngClass]="{'quill-invalid': letterForm.get('jobDescription')?.invalid && letterForm.get('jobDescription')?.touched}">
+            </quill-editor>
+            <small class="field-error" *ngIf="letterForm.get('jobDescription')?.invalid && letterForm.get('jobDescription')?.touched">
+              La description du poste est requise.
+            </small>
+          </div>
+        </div>
+
+        <button pButton type="submit"
+                [loading]="isLoading"
+                icon="pi pi-sparkles"
+                label="Générer la lettre"
+                class="btn-primary p-button-lg w-full"
+                style="padding:.875rem;border-radius:10px;font-size:.95rem;"></button>
       </form>
     </div>
 
-    <!-- Right: Display generated letter -->
-    <div>
-      <p-panel header="Generated Letter">
-        <div class="bg-white p-4 border rounded min-h-[400px] whitespace-pre-wrap text-gray-800">
-          {{ generatedLetter }}
+    <!-- ── Panneau droit : résultat ──────────────────────────── -->
+    <div class="flex flex-col gap-4">
+
+      <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden flex flex-col" style="min-height: 520px;">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+          <div class="flex items-center gap-2 font-semibold text-slate-800 text-sm">
+            <i class="pi pi-file-edit text-indigo-500"></i>
+            Lettre générée
+          </div>
+          <button pButton icon="pi pi-copy" label="Copier"
+                  class="p-button-outlined p-button-sm p-button-secondary"
+                  [disabled]="isLoading || !generatedLetterHtml"
+                  (click)="copyLetter()"></button>
         </div>
-        <ng-template pTemplate="footer">
-            <div class="flex justify-end">
-              <button pButton type="button" label="Copy Text" icon="pi pi-copy" class="p-button-secondary"></button>
+
+        <!-- Skeleton loading -->
+        <div *ngIf="isLoading" class="p-5 flex flex-col gap-3">
+          <p-skeleton height="1rem" width="60%"></p-skeleton>
+          <p-skeleton height="1rem" width="90%"></p-skeleton>
+          <p-skeleton height="1rem" width="80%"></p-skeleton>
+          <p-skeleton height="1rem" width="70%"></p-skeleton>
+          <p-skeleton height="1rem" width="85%"></p-skeleton>
+          <p-skeleton height="1rem" width="55%"></p-skeleton>
+        </div>
+
+        <!-- Generated text -->
+        <div *ngIf="!isLoading" class="flex-1 overflow-auto">
+          <div *ngIf="generatedLetterHtml; else emptyState"
+               class="letter-output ql-editor"
+               [innerHTML]="generatedLetterHtml">
+          </div>
+          <ng-template #emptyState>
+            <div class="flex flex-col items-center justify-center h-full py-16 text-slate-300">
+              <i class="pi pi-file-edit text-5xl block mb-3"></i>
+              <p class="text-sm m-0">La lettre générée apparaîtra ici</p>
             </div>
           </ng-template>
-      </p-panel>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 flex gap-3">
+        <i class="pi pi-lightbulb text-amber-500 text-sm mt-0.5 shrink-0"></i>
+        <p class="text-xs text-amber-700 m-0 leading-relaxed">
+          <strong>Conseil :</strong> Relisez la lettre générée et personnalisez-la avec des anecdotes ou réalisations spécifiques. Une lettre authentique a toujours plus d'impact.
+        </p>
+      </div>
     </div>
+
   </div>
 </div>

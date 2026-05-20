@@ -1,4 +1,363 @@
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Base */
+* { box-sizing: border-box; }
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* ─── PrimeNG overrides ─────────────────────────────────────── */
+
+/* Buttons — restore padding wiped by Tailwind preflight */
+.p-button {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: .625rem 1.25rem;
+  min-width: unset;
+}
+.p-button.p-button-sm  { padding: .4375rem .875rem; font-size: .8125rem; }
+.p-button.p-button-lg  { padding: .875rem 1.375rem; font-size: 1rem; }
+.p-button.p-button-icon-only          { padding: .625rem;   width: 2.375rem; }
+.p-button.p-button-icon-only.p-button-sm { padding: .4375rem; width: 2rem; }
+.p-button.p-button-icon-only.p-button-lg { padding: .875rem;  width: 3rem; }
+.p-button .p-button-icon { line-height: 1; }
+
+/* ── Text inputs ──────────────────────────────────────────────
+   Tailwind preflight resets: border-width:0 on * and padding:0
+   on input/textarea. We use !important on visual properties to
+   guarantee consistent appearance regardless of cascade order.   */
+.p-inputtext {
+  font-family: 'Inter', sans-serif !important;
+  font-size: .875rem !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: .625rem .875rem !important;
+  outline: none !important;
+  transition: border-color .15s, box-shadow .15s !important;
+  line-height: 1.5 !important;
+  width: 100%;
+}
+.p-inputtext::placeholder { color: #94a3b8; opacity: 1; }
+.p-inputtext:hover:not(:disabled)  { border-color: #a5b4fc !important; }
+.p-inputtext:focus                 { border-color: #6366f1 !important; box-shadow: 0 0 0 3px rgb(99 102 241 / .15) !important; }
+.p-inputtext:disabled              { background: #f8fafc !important; color: #94a3b8 !important; cursor: not-allowed; }
+
+/* Textarea shares inputtext class */
+.p-inputtextarea.p-inputtext {
+  resize: vertical !important;
+  line-height: 1.6 !important;
+  padding: .625rem .875rem !important;
+}
+
+/* ── Icon-inside-input wrappers ───────────────────────────── */
+.p-input-icon-left,
+.p-input-icon-right { position: relative; display: block; }
+
+.p-input-icon-left > i,
+.p-input-icon-right > i {
+  /* Keep PrimeNG's top:50% + margin-top approach; just override color */
+  color: #94a3b8 !important;
+  font-size: .875rem;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Left icon: override left position from theme (.75rem → .875rem for our taller input) */
+.p-input-icon-left > i:first-of-type  { left: .875rem !important; }
+/* Right icon: pointer-events auto for clickable eye toggle */
+.p-input-icon-right > i:last-of-type  { right: .875rem !important; pointer-events: auto; cursor: pointer; }
+
+.p-input-icon-left  > .p-inputtext { padding-left:  2.5rem !important; }
+.p-input-icon-right > .p-inputtext { padding-right: 2.5rem !important; }
+.p-input-icon-left.p-input-icon-right > .p-inputtext {
+  padding-left:  2.5rem !important;
+  padding-right: 2.5rem !important;
+}
+
+/* ── Dropdown ─────────────────────────────────────────────── */
+.p-dropdown {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  transition: border-color .15s, box-shadow .15s !important;
+  outline: none !important;
+  width: 100%;
+}
+.p-dropdown:not(.p-disabled):hover  { border-color: #a5b4fc !important; }
+.p-dropdown:not(.p-disabled).p-focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgb(99 102 241 / .15) !important;
+}
+.p-dropdown .p-dropdown-label {
+  font-family: 'Inter', sans-serif;
+  font-size: .875rem;
+  color: #0f172a;
+  padding: .625rem .875rem;
+  line-height: 1.5;
+  background: transparent;
+  border: none;
+}
+.p-dropdown .p-dropdown-label.p-placeholder { color: #94a3b8; }
+.p-dropdown .p-dropdown-trigger { color: #64748b; width: 2.5rem; }
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  font-family: 'Inter', sans-serif;
+  font-size: .875rem;
+  padding: .625rem .875rem;
+  color: #334155;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover { background: #f1f5f9; }
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* ── Dialog ───────────────────────────────────────────────── */
+.p-dialog {
+  border-radius: 16px !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 24px 64px -12px rgb(0 0 0 / .18), 0 0 0 1px rgb(0 0 0 / .04) !important;
+  overflow: hidden;
+}
+.p-dialog .p-dialog-header {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 1.25rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: .95rem;
+  color: #0f172a;
+}
+.p-dialog .p-dialog-content { padding: 1.25rem 1.5rem 0; }
+.p-dialog .p-dialog-footer  {
+  border-top: 1px solid #f1f5f9;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+}
+
+/* ── Other components ─────────────────────────────────────── */
+.p-card { border-radius: 14px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / .06); border: 1px solid #f1f5f9; }
+.p-card .p-card-body { padding: 1.25rem; }
+.p-panel { border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+.p-panel .p-panel-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: .875rem 1.25rem; font-weight: 600; font-size: .875rem; color: #1e293b; }
+.p-panel .p-panel-content { padding: 1.25rem; background: #fff; }
+.p-fieldset { border: 1px solid #e2e8f0; border-radius: 10px; }
+.p-fieldset .p-fieldset-legend { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: .3rem .85rem; font-size: .8rem; font-weight: 600; color: #4f46e5; }
+.p-fieldset .p-fieldset-content { padding: 1rem; }
+.p-datatable .p-datatable-thead > tr > th { background: #f8fafc; color: #64748b; font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid #e2e8f0; padding: .75rem 1rem; }
+.p-datatable .p-datatable-tbody > tr > td { padding: .875rem 1rem; border-bottom: 1px solid #f1f5f9; color: #334155; }
+.p-datatable .p-datatable-tbody > tr:hover > td { background: #f5f3ff; }
+.p-tag { border-radius: 6px; font-size: .72rem; font-weight: 600; padding: .2rem .6rem; }
+
+/* Page layout */
+.page-wrapper { padding: 2rem; animation: slideUp .3s ease-out; }
+.page-header { margin-bottom: 1.75rem; }
+.page-header h1 { font-size: 1.55rem; font-weight: 700; color: #0f172a; margin: 0 0 .3rem; line-height: 1.2; }
+.page-header p { color: #64748b; margin: 0; font-size: .875rem; }
+
+/* Stat card */
+.stat-card { border-radius: 14px; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: .5rem; transition: transform .2s, box-shadow .2s; }
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -4px rgb(0 0 0 / .14); }
+.stat-card .stat-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+.stat-card .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; }
+.stat-card .stat-label { font-size: .78rem; font-weight: 500; opacity: .72; }
+
+/* Nav item */
+.nav-item { display: flex; align-items: center; gap: .75rem; padding: .6rem .85rem; border-radius: 8px; color: #64748b; font-size: .875rem; font-weight: 500; text-decoration: none; cursor: pointer; transition: all .15s; position: relative; }
+.nav-item i { font-size: 1rem; width: 1.1rem; flex-shrink: 0; }
+.nav-item:hover { background: #f1f5f9; color: #1e293b; }
+.nav-item.active { background: #eef2ff; color: #4f46e5; font-weight: 600; }
+.nav-item.active::before { content: ''; position: absolute; left: 0; top: 18%; bottom: 18%; width: 3px; border-radius: 0 3px 3px 0; background: linear-gradient(180deg, #6366f1, #8b5cf6); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+
+/* Animations */
+@keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── Button variants ───────────────────────────────────────── */
+/* Primary — gradient indigo→violet */
+.btn-primary.p-button,
+a.btn-primary.p-button {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  border-radius: 9px !important;
+  box-shadow: 0 2px 8px rgb(99 102 241 / .25) !important;
+  transition: opacity .18s, transform .18s, box-shadow .18s !important;
+  text-decoration: none !important;
+}
+.btn-primary.p-button:not(:disabled):hover,
+a.btn-primary.p-button:hover {
+  opacity: .92 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgb(99 102 241 / .38) !important;
+}
+.btn-primary.p-button:not(:disabled):active  { transform: translateY(0) !important; }
+.btn-primary.p-button:focus                  { box-shadow: 0 0 0 3px rgb(99 102 241 / .28) !important; }
+
+/* Secondary — white outlined */
+.btn-secondary.p-button,
+a.btn-secondary.p-button {
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  color: #334155 !important;
+  font-weight: 500 !important;
+  border-radius: 9px !important;
+  box-shadow: 0 1px 3px rgb(0 0 0 / .06) !important;
+  transition: all .18s !important;
+  text-decoration: none !important;
+}
+.btn-secondary.p-button:not(:disabled):hover,
+a.btn-secondary.p-button:hover {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 2px 8px rgb(0 0 0 / .09) !important;
+}
+
+/* Ghost — text only, indigo on hover */
+.btn-ghost.p-button {
+  background: transparent !important;
+  border: none !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  transition: background .15s, color .15s !important;
+}
+.btn-ghost.p-button:not(:disabled):hover { background: #f1f5f9 !important; color: #4f46e5 !important; }
+
+/* Danger ghost */
+.btn-danger-ghost.p-button {
+  background: transparent !important;
+  border: none !important;
+  color: #94a3b8 !important;
+  border-radius: 8px !important;
+  transition: all .15s !important;
+}
+.btn-danger-ghost.p-button:not(:disabled):hover { background: #fef2f2 !important; color: #ef4444 !important; }
+
+/* Dark (Pro plan) */
+.btn-dark.p-button {
+  background: #0f172a !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border-radius: 9px !important;
+  transition: opacity .18s, transform .18s !important;
+}
+.btn-dark.p-button:not(:disabled):hover { opacity: .85 !important; transform: translateY(-1px) !important; }
+
+/* ─── Quill editor overrides ────────────────────────────────── */
+.quill-field {
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  transition: border-color .15s, box-shadow .15s;
+
+  &:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgb(99 102 241 / .15);
+  }
+
+  .ql-toolbar {
+    background: #f8fafc;
+    border: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: .375rem .5rem;
+    font-family: 'Inter', sans-serif;
+
+    .ql-formats { margin-right: .5rem; }
+    button, .ql-picker { color: #64748b; }
+    button:hover, button.ql-active, .ql-picker-label:hover { color: #4f46e5; }
+    button svg .ql-stroke { stroke: currentColor; }
+    button svg .ql-fill  { fill: currentColor; }
+  }
+
+  .ql-container {
+    border: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .ql-editor {
+    font-size: .875rem;
+    line-height: 1.65;
+    color: #334155;
+    padding: .75rem 1rem;
+
+    &.ql-blank::before { color: #94a3b8; font-style: normal; }
+  }
+}
+
+.quill-invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgb(239 68 68 / .12) !important;
+}
+
+/* ─── Form fields ───────────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: .35rem; }
+.field-label { font-size: .8rem; font-weight: 600; color: #475569; letter-spacing: .01em; }
+.field-required { color: #ef4444; margin-left: .15rem; }
+.field-error { font-size: .75rem; color: #ef4444; margin-top: .15rem; }
+
+/* Invalid field highlight */
+.p-inputtext.ng-invalid.ng-dirty  { border-color: #ef4444 !important; box-shadow: 0 0 0 3px rgb(239 68 68 / .12) !important; }
+.p-inputtext.ng-invalid.ng-dirty:focus { border-color: #ef4444 !important; box-shadow: 0 0 0 3px rgb(239 68 68 / .2) !important; }
+.p-inputtextarea.ng-invalid.ng-dirty { border-color: #ef4444 !important; box-shadow: 0 0 0 3px rgb(239 68 68 / .12) !important; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: #fff; border: 1px solid #f1f5f9; display: flex; flex-direction: row; align-items: center; gap: 1rem; }
+.stat-card .stat-body { display: flex; flex-direction: column; gap: .25rem; }
+.stat-card .stat-value { font-size: 1.75rem; font-weight: 800; line-height: 1; margin: 0; }
+.stat-card .stat-label { font-size: .75rem; color: #94a3b8; margin: 0; }
+.admin-user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#6366f1,#8b5cf6); color: #fff; font-size: .75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+// ── Auto-save indicator ────────────────────────────────────────────────────
+.save-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .75rem;
+  font-weight: 500;
+  &.saving { color: #94a3b8; }
+  &.saved  { color: #10b981; }
+  &.error  { color: #ef4444; }
+}
+
+// ── Letter read-only output ────────────────────────────────────────────────
+.letter-output {
+  padding: 24px 28px;
+  font-size: .875rem;
+  line-height: 1.75;
+  color: #334155;
+  border: none !important;
+  p { margin: 0 0 1em; }
+  p:last-child { margin-bottom: 0; }
+}
+
+// ── Quill display (preview) ────────────────────────────────────────────────
+.cv-summary-text.ql-editor,
+.cv-desc.ql-editor {
+  padding: 0 !important;
+  border: none !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  p { margin: 0 0 .4em; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { padding-left: 1.25em; margin: .25em 0; }
+}
