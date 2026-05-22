@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { API_URL } from '../config/api.config';
+import { ConfigService } from '../config/api.config';
 import { ApiResponse, AuthCredentials, AuthResponse, AuthUser, RegisterCredentials } from '../interfaces/api.interfaces';
 
 const TOKEN_KEY = 'cv_token';
@@ -11,7 +11,7 @@ const USER_KEY  = 'cv_user';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private readonly url = `${API_URL}/auth`;
+  private readonly url = ConfigService.toApiUrl('auth');
   private _user$ = new BehaviorSubject<AuthUser | null>(this.storedUser());
 
   readonly user$ = this._user$.asObservable();

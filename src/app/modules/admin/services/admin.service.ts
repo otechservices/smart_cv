@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_URL } from '../../../core/config/api.config';
+import { ConfigService } from '../../../core/config/api.config';
 import { ApiResponse } from '../../../core/interfaces/api.interfaces';
 
 export interface AdminUser {
@@ -25,7 +25,7 @@ export interface AdminStats {
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
-  private base = `${API_URL}/admin`;
+  private base = ConfigService.toApiUrl('admin');
 
   constructor(private http: HttpClient) {}
 

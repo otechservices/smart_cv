@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import { CvRoutingModule } from './cv-routing.module';
-import { CvListComponent } from './components/cv-list/cv-list.component';
-import { CvFormComponent } from './components/cv-form/cv-form.component';
+import { CvRoutingModule }   from './cv-routing.module';
+import { CvListComponent }   from './components/cv-list/cv-list.component';
+import { CvFormComponent }   from './components/cv-form/cv-form.component';
 import { CvPreviewComponent } from './components/cv-preview/cv-preview.component';
+import { CvDesignComponent } from './components/cv-design/cv-design.component';
 
 // PrimeNG
 import { ButtonModule }        from 'primeng/button';
@@ -16,6 +18,7 @@ import { FieldsetModule }      from 'primeng/fieldset';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SkeletonModule }      from 'primeng/skeleton';
 import { TooltipModule }       from 'primeng/tooltip';
+import { SidebarModule }       from 'primeng/sidebar';
 import { QuillModule }         from 'ngx-quill';
 
 @NgModule({
@@ -23,11 +26,14 @@ import { QuillModule }         from 'ngx-quill';
     CvListComponent,
     CvFormComponent,
     CvPreviewComponent,
+    CvDesignComponent,
   ],
   imports: [
     CommonModule,
+    RouterModule,
     CvRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     ButtonModule,
     RippleModule,
     InputTextModule,
@@ -36,6 +42,7 @@ import { QuillModule }         from 'ngx-quill';
     ConfirmDialogModule,
     SkeletonModule,
     TooltipModule,
+    SidebarModule,
     QuillModule,
   ]
 })

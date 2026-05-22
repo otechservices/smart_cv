@@ -1,0 +1,152 @@
+<div class="design-page">
+
+  <!-- Top bar -->
+  <div class="design-topbar">
+    <button pButton pRipple icon="pi pi-arrow-left" label="Retour" class="p-button-text p-button-sm topbar-back" (click)="goBack()"></button>
+    <div class="topbar-title">
+      <i class="pi pi-palette mr-2"></i>
+      Éditeur de design
+    </div>
+    <div class="topbar-actions">
+      <button pButton pRipple icon="pi pi-download" label="PNG" class="p-button-outlined p-button-sm mr-2"
+        *ngIf="mode !== 'C'" (click)="exportPng()"></button>
+      <button pButton pRipple icon="pi pi-save" [label]="isSaving ? 'Enregistrement…' : 'Sauvegarder'"
+        class="p-button-sm" [disabled]="isSaving" (click)="saveDesign()"></button>
+    </div>
+  </div>
+
+  <!-- Mode switcher -->
+  <div class="mode-strip">
+    <div *ngFor="let m of modes" class="mode-card" [class.active]="mode === m.id" (click)="setMode(m.id)">
+      <i class="pi {{ m.icon }} mode-icon"></i>
+      <div>
+        <div class="mode-label">{{ m.label }}</div>
+        <div class="mode-desc">{{ m.desc }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="design-body">
+
+    <!-- ── CANVAS TOOLBAR (Modes A & B) ── -->
+    <div class="canvas-toolbar" *ngIf="mode !== 'C'">
+      <div class="tool-group">
+        <span class="tool-label">Ajouter</span>
+        <button pButton pRipple icon="pi pi-font"   class="p-button-outlined p-button-sm tool-btn" pTooltip="Texte"     (click)="addText()"></button>
+        <button pButton pRipple icon="pi pi-stop"   class="p-button-outlined p-button-sm tool-btn" pTooltip="Rectangle" (click)="addRect()"></button>
+        <button pButton pRipple icon="pi pi-circle" class="p-button-outlined p-button-sm tool-btn" pTooltip="Cercle"    (click)="addCircle()"></button>
+        <button pButton pRipple icon="pi pi-minus"  class="p-button-outlined p-button-sm tool-btn" pTooltip="Ligne"     (click)="addLine()"></button>
+        <label class="tool-btn tool-file-btn" pTooltip="Image">
+          <i class="pi pi-image"></i>
+          <input type="file" accept="image/*" hidden (change)="addImageFromFile($event)">
+        </label>
+      </div>
+
+      <div class="tool-divider"></div>
+
+      <div class="tool-group">
+        <span class="tool-label">Couleur</span>
+        <input type="color" class="color-input" [(ngModel)]="activeColor" (change)="applyColor()" pTooltip="Couleur remplissage">
+        <input type="color" class="color-input" [(ngModel)]="bgColor" (change)="setBackground()" pTooltip="Fond du canvas">
+      </div>
+
+      <div class="tool-divider"></div>
+
+      <div class="tool-group">
+        <span class="tool-label">Texte</span>
+        <select class="font-size-select" [(ngModel)]="activeFontSize" (change)="changeFontSize()">
+          <option *ngFor="let s of [10,12,14,16,18,20,24,28,32,36,42,48,56,64]" [value]="s">{{ s }}px</option>
+        </select>
+        <button pButton pRipple icon="pi pi-bold" class="p-button-outlined p-button-sm tool-btn" pTooltip="Gras" (click)="toggleBold()"></button>
+      </div>
+
+      <div class="tool-divider"></div>
+
+      <div class="tool-group">
+        <span class="tool-label">Objet</span>
+        <button pButton pRipple icon="pi pi-arrow-up"   class="p-button-outlined p-button-sm tool-btn" pTooltip="Avancer" (click)="bringForward()"></button>
+        <button pButton pRipple icon="pi pi-arrow-down" class="p-button-outlined p-button-sm tool-btn" pTooltip="Reculer" (click)="sendBackward()"></button>
+        <button pButton pRipple icon="pi pi-trash"      class="p-button-danger p-button-outlined p-button-sm tool-btn" pTooltip="Supprimer" (click)="deleteSelected()"></button>
+      </div>
+
+      <div class="tool-divider"></div>
+
+      <div class="tool-group" *ngIf="mode === 'B'">
+        <button pButton pRipple icon="pi pi-id-card" label="Recharger CV" class="p-button-outlined p-button-sm" (click)="loadCvTemplate()"></button>
+      </div>
+
+      <div class="tool-group">
+        <button pButton pRipple icon="pi pi-trash" label="Tout effacer" class="p-button-text p-button-danger p-button-sm" (click)="clearCanvas()"></button>
+      </div>
+    </div>
+
+    <!-- ── CANVAS AREA (Modes A & B) ── -->
+    <div class="canvas-container" *ngIf="mode !== 'C'">
+      <div class="canvas-scroll">
+        <div class="canvas-wrapper">
+          <canvas #designCanvas></canvas>
+        </div>
+      </div>
+      <div class="canvas-hint">
+        <i class="pi pi-info-circle mr-1"></i>
+        Cliquez pour sélectionner · Glissez pour déplacer · Double-clic sur texte pour éditer
+      </div>
+    </div>
+
+    <!-- ── IMPORT MODE (Mode C) ── -->
+    <div class="import-container" *ngIf="mode === 'C'">
+      <div class="import-card">
+        <div class="import-header">
+          <i class="pi pi-upload import-icon"></i>
+          <h2>Importer votre design</h2>
+          <p>Importez une image (PNG, JPG) ou la première page d'un PDF créé sur Canva, PowerPoint, Figma…</p>
+        </div>
+
+        <ng-container *ngIf="!coverImagePreview">
+          <label class="drop-zone">
+            <input type="file" accept="image/*,application/pdf" hidden (change)="onCoverImageUpload($event)">
+            <i class="pi pi-cloud-upload drop-icon"></i>
+            <span class="drop-text">Cliquez pour choisir un fichier</span>
+            <span class="drop-hint">PNG · JPG · PDF — max 10 Mo</span>
+          </label>
+        </ng-container>
+
+        <ng-container *ngIf="coverImagePreview">
+          <div class="preview-wrap">
+            <img [src]="coverImagePreview" alt="Aperçu" class="cover-preview" *ngIf="!coverImagePreview?.startsWith('data:application/pdf')">
+            <div class="pdf-placeholder" *ngIf="coverImagePreview?.startsWith('data:application/pdf')">
+              <i class="pi pi-file-pdf pdf-placeholder-icon"></i>
+              <span>PDF importé</span>
+            </div>
+            <div class="preview-actions">
+              <button pButton pRipple icon="pi pi-trash" label="Supprimer" class="p-button-danger p-button-outlined p-button-sm" (click)="removeCoverImage()"></button>
+              <label>
+                <input type="file" accept="image/*,application/pdf" hidden (change)="onCoverImageUpload($event)">
+                <span pButton pRipple class="p-button p-button-outlined p-button-sm">
+                  <i class="pi pi-refresh mr-2"></i>Remplacer
+                </span>
+              </label>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="import-tips">
+          <div class="tip-title"><i class="pi pi-lightbulb mr-1"></i>Conseils</div>
+          <ul>
+            <li>Exportez votre design en PNG depuis Canva → Fichier → Télécharger</li>
+            <li>Dans PowerPoint : Fichier → Exporter → Format PNG</li>
+            <li>Dans Figma : clic droit sur le frame → Export → PNG</li>
+            <li>Pour un PDF : utilisez la première page uniquement</li>
+          </ul>
+        </div>
+
+        <div class="import-save">
+          <button pButton pRipple icon="pi pi-save" label="Sauvegarder l'import"
+            class="p-button-lg" [disabled]="!coverImagePreview || isSaving" (click)="saveDesign()">
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

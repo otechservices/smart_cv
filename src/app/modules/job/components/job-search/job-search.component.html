@@ -1,0 +1,154 @@
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <div>
+      <h1>Recherche d'offres</h1>
+      <p>Trouvez des offres d'emploi et ajoutez-les directement à votre file de candidatures.</p>
+    </div>
+    <a routerLink="../queue" class="queue-link">
+      <i class="pi pi-list mr-2"></i>Ma file de candidatures
+      <span class="queue-badge">→</span>
+    </a>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-card">
+    <div class="search-row">
+      <div class="search-field flex-1">
+        <span class="p-input-icon-left w-full">
+          <i class="pi pi-search"></i>
+          <input pInputText [(ngModel)]="query" placeholder="Développeur Angular, Data Scientist…"
+                 class="w-full search-input" (keydown.enter)="search()">
+        </span>
+      </div>
+      <div class="search-field" style="width:220px">
+        <span class="p-input-icon-left w-full">
+          <i class="pi pi-map-marker"></i>
+          <input pInputText [(ngModel)]="location" placeholder="Remote, France…"
+                 class="w-full search-input" (keydown.enter)="search()">
+        </span>
+      </div>
+      <button pButton pRipple label="Rechercher" icon="pi pi-search"
+              class="p-button-lg search-btn" [loading]="isLoading" (click)="search()"></button>
+    </div>
+    <p class="search-hint">
+      <i class="pi pi-info-circle mr-1"></i>
+      Source : Remotive (offres remote internationales) — 100% gratuit, sans inscription.
+    </p>
+  </div>
+
+  <!-- Loading skeletons -->
+  <div *ngIf="isLoading" class="results-grid">
+    <div *ngFor="let i of [1,2,3,4,5,6]" class="job-card-skeleton">
+      <p-skeleton height="1rem" styleClass="mb-3" width="60%"></p-skeleton>
+      <p-skeleton height=".75rem" styleClass="mb-2" width="40%"></p-skeleton>
+      <p-skeleton height=".75rem" styleClass="mb-4" width="30%"></p-skeleton>
+      <p-skeleton height="2rem" width="120px"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && hasSearched && results.length === 0" class="empty-state">
+    <i class="pi pi-search text-5xl text-slate-200 block mb-3"></i>
+    <p class="text-slate-400">Aucune offre trouvée pour <strong>"{{ query }}"</strong>.</p>
+    <p class="text-slate-300 text-xs">Essayez des mots-clés en anglais (ex: "developer", "engineer").</p>
+  </div>
+
+  <!-- No search yet -->
+  <div *ngIf="!isLoading && !hasSearched" class="empty-state">
+    <i class="pi pi-briefcase text-5xl text-slate-200 block mb-3"></i>
+    <p class="text-slate-400">Lancez une recherche pour voir les offres disponibles.</p>
+  </div>
+
+  <!-- Results -->
+  <div *ngIf="!isLoading && results.length > 0">
+    <div class="results-meta">{{ results.length }} offre(s) trouvée(s)</div>
+    <div class="results-grid">
+      <div *ngFor="let job of results" class="job-card">
+
+        <div class="job-card-header">
+          <div class="company-logo" [style.background]="job.logo ? 'none' : '#eef2ff'">
+            <img *ngIf="job.logo" [src]="job.logo" [alt]="job.company" (error)="job.logo = null">
+            <span *ngIf="!job.logo" class="company-initial">{{ job.company.charAt(0) }}</span>
+          </div>
+          <div class="job-card-meta">
+            <div class="job-type-badge">{{ job.job_type || 'Remote' }}</div>
+            <div class="job-date" *ngIf="job.posted_at">{{ formatDate(job.posted_at) }}</div>
+          </div>
+        </div>
+
+        <h3 class="job-title" (click)="openDetail(job)">{{ job.title }}</h3>
+        <p class="job-company">{{ job.company }}</p>
+
+        <div class="job-location">
+          <i class="pi pi-map-marker mr-1"></i>{{ job.location || 'Remote' }}
+        </div>
+
+        <div *ngIf="job.salary" class="job-salary">
+          <i class="pi pi-dollar mr-1"></i>{{ job.salary }}
+        </div>
+
+        <div class="job-tags" *ngIf="job.tags && job.tags.length > 0">
+          <span *ngFor="let tag of job.tags" class="job-tag">{{ tag }}</span>
+        </div>
+
+        <div class="job-desc">{{ job.description | slice:0:120 }}…</div>
+
+        <div class="job-card-actions">
+          <button pButton pRipple icon="pi pi-external-link" label="Voir l'offre"
+                  class="p-button-outlined p-button-sm action-btn"
+                  (click)="openDetail(job)"></button>
+          <button pButton pRipple icon="pi pi-plus" label="Ajouter à la file"
+                  class="p-button-sm add-btn"
+                  [loading]="addingId === job.id"
+                  (click)="addToQueue(job)"></button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Detail dialog -->
+<p-dialog [(visible)]="showDetailDialog" [modal]="true" [closable]="true"
+          [style]="{ width: '680px', maxWidth: '95vw' }" [draggable]="false"
+          styleClass="job-detail-dialog">
+
+  <ng-template pTemplate="header">
+    <div class="dialog-header" *ngIf="selectedJob">
+      <div class="dialog-logo" [style.background]="selectedJob.logo ? 'none' : '#eef2ff'">
+        <img *ngIf="selectedJob.logo" [src]="selectedJob.logo" [alt]="selectedJob.company">
+        <span *ngIf="!selectedJob.logo">{{ selectedJob.company.charAt(0) }}</span>
+      </div>
+      <div>
+        <div class="dialog-title">{{ selectedJob.title }}</div>
+        <div class="dialog-company">{{ selectedJob.company }} · {{ selectedJob.location }}</div>
+      </div>
+    </div>
+  </ng-template>
+
+  <div *ngIf="selectedJob" class="dialog-body">
+    <div class="dialog-meta">
+      <span *ngIf="selectedJob.job_type" class="meta-chip">{{ selectedJob.job_type }}</span>
+      <span *ngIf="selectedJob.salary" class="meta-chip salary-chip">{{ selectedJob.salary }}</span>
+      <span *ngIf="selectedJob.posted_at" class="meta-date">Publié le {{ formatDate(selectedJob.posted_at) }}</span>
+    </div>
+    <div *ngIf="selectedJob.tags && selectedJob.tags.length > 0" class="dialog-tags">
+      <span *ngFor="let tag of selectedJob.tags" class="job-tag">{{ tag }}</span>
+    </div>
+    <div class="dialog-desc">{{ selectedJob.description }}</div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <a *ngIf="selectedJob?.url" [href]="selectedJob!.url" target="_blank" pButton pRipple
+       icon="pi pi-external-link" label="Ouvrir l'offre"
+       class="p-button-outlined p-button-sm mr-2"></a>
+    <button pButton pRipple icon="pi pi-plus" label="Ajouter à la file"
+            class="p-button-sm"
+            *ngIf="selectedJob"
+            [loading]="addingId === selectedJob.id"
+            (click)="addToQueue(selectedJob!); showDetailDialog = false"></button>
+  </ng-template>
+
+</p-dialog>

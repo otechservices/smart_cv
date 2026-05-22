@@ -1,0 +1,163 @@
+<div class="page-wrapper">
+
+  <div class="page-header queue-page-header">
+    <div>
+      <h1>Ma file de candidatures</h1>
+      <p>Gérez vos candidatures, générez des lettres IA et suivez vos statuts.</p>
+    </div>
+    <div class="queue-page-actions">
+      <button pButton pRipple icon="pi pi-send" label="Marquer prêtes → Envoyées"
+              class="p-button-outlined p-button-sm" (click)="markAllSent()"></button>
+      <button pButton pRipple icon="pi pi-plus" label="Ajouter manuellement"
+              class="p-button-sm btn-add" (click)="openAddDialog()"></button>
+      <a routerLink="../search" pButton pRipple icon="pi pi-search" label="Chercher des offres"
+         class="p-button-outlined p-button-sm"></a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div *ngFor="let s of stats" class="stat-card" [style.border-left-color]="s.color">
+      <div class="stat-count" [style.color]="s.color">{{ s.count }}</div>
+      <div class="stat-label">{{ s.label }}</div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="queue-list">
+    <div *ngFor="let i of [1,2,3]" class="queue-item-skeleton">
+      <p-skeleton height="1rem" width="50%" styleClass="mb-2"></p-skeleton>
+      <p-skeleton height=".75rem" width="30%" styleClass="mb-3"></p-skeleton>
+      <p-skeleton height="2rem" width="200px"></p-skeleton>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!isLoading && queue.length === 0" class="empty-state">
+    <i class="pi pi-inbox text-5xl text-slate-200 block mb-3"></i>
+    <p class="text-slate-400">Votre file est vide.</p>
+    <p class="text-slate-300 text-sm">
+      <a routerLink="../search" class="text-indigo-500">Recherchez des offres</a> ou ajoutez-en manuellement.
+    </p>
+  </div>
+
+  <!-- Queue items -->
+  <div *ngIf="!isLoading && queue.length > 0" class="queue-list">
+    <div *ngFor="let item of queue" class="queue-item">
+
+      <!-- Left: info -->
+      <div class="item-info">
+        <div class="item-status-dot" [style.background]="getCfg(item.status).color"></div>
+        <div>
+          <div class="item-title">{{ item.title }}</div>
+          <div class="item-company">
+            {{ item.company }}
+            <span *ngIf="item.location" class="item-location"> · {{ item.location }}</span>
+            <span *ngIf="item.source" class="item-source">{{ item.source }}</span>
+          </div>
+          <div class="item-date">Ajouté le {{ formatDate(item.created_at) }}
+            <span *ngIf="item.applied_at"> · Envoyé le {{ formatDate(item.applied_at) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: status dropdown -->
+      <div class="item-status">
+        <div class="status-badge" [style.background]="getCfg(item.status).bg" [style.color]="getCfg(item.status).color">
+          <i class="pi {{ getCfg(item.status).icon }} mr-1" style="font-size:.7rem"></i>
+          {{ getCfg(item.status).label }}
+        </div>
+        <p-dropdown [options]="statusOptions" [ngModel]="item.status"
+                    (ngModelChange)="onStatusChange(item, $event)"
+                    optionLabel="label" optionValue="value"
+                    styleClass="status-select" placeholder="Changer"></p-dropdown>
+      </div>
+
+      <!-- Right: actions -->
+      <div class="item-actions">
+        <a *ngIf="item.job_url" [href]="item.job_url" target="_blank"
+           pButton pRipple icon="pi pi-external-link"
+           class="p-button-text p-button-sm p-button-rounded action-ghost"
+           pTooltip="Ouvrir l'offre" tooltipPosition="top"></a>
+
+        <button pButton pRipple
+                [icon]="item.cover_letter ? 'pi pi-eye' : 'pi pi-magic'"
+                [pTooltip]="item.cover_letter ? 'Voir la lettre' : 'Générer lettre IA'"
+                tooltipPosition="top"
+                [loading]="generatingId === item.id"
+                [ngClass]="item.cover_letter ? 'p-button-text p-button-sm p-button-rounded letter-view-btn' : 'p-button-text p-button-sm p-button-rounded letter-gen-btn'"
+                (click)="item.cover_letter ? openLetter(item) : generateLetter(item)">
+        </button>
+
+        <button pButton pRipple icon="pi pi-trash"
+                class="p-button-text p-button-danger p-button-rounded p-button-sm"
+                pTooltip="Supprimer" tooltipPosition="top"
+                (click)="remove(item)"></button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Letter dialog ──────────────────────────────────────────── -->
+<p-dialog header="Lettre de motivation" [(visible)]="showLetterDialog"
+          [modal]="true" [closable]="true" [draggable]="false"
+          [style]="{ width: '720px', maxWidth: '95vw' }">
+
+  <div *ngIf="letterItem" class="letter-dialog-content">
+    <div class="letter-job-info">
+      <i class="pi pi-briefcase mr-2 text-indigo-400"></i>
+      <strong>{{ letterItem.title }}</strong> chez {{ letterItem.company }}
+    </div>
+    <div class="letter-body">{{ letterItem.cover_letter }}</div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple icon="pi pi-copy" label="Copier"
+            class="p-button-outlined p-button-sm mr-2" (click)="copyLetter()"></button>
+    <button *ngIf="letterItem" pButton pRipple icon="pi pi-refresh" label="Regénérer"
+            class="p-button-sm" [loading]="generatingId === letterItem.id"
+            (click)="generateLetter(letterItem!)"></button>
+  </ng-template>
+</p-dialog>
+
+<!-- ── Add manual dialog ──────────────────────────────────────── -->
+<p-dialog header="Ajouter une candidature" [(visible)]="showAddDialog"
+          [modal]="true" [closable]="true" [draggable]="false"
+          [style]="{ width: '520px' }">
+
+  <div class="flex flex-col gap-4 pt-2">
+    <div class="field">
+      <label class="field-label">Poste <span class="field-required">*</span></label>
+      <input pInputText [(ngModel)]="addForm.title" placeholder="Développeur Angular" class="w-full">
+    </div>
+    <div class="field">
+      <label class="field-label">Entreprise <span class="field-required">*</span></label>
+      <input pInputText [(ngModel)]="addForm.company" placeholder="Acme Corp" class="w-full">
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <div class="field">
+        <label class="field-label">Localisation</label>
+        <input pInputText [(ngModel)]="addForm.location" placeholder="Paris / Remote" class="w-full">
+      </div>
+      <div class="field">
+        <label class="field-label">Lien de l'offre</label>
+        <input pInputText [(ngModel)]="addForm.job_url" placeholder="https://…" class="w-full">
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Description du poste (pour l'IA)</label>
+      <textarea pInputTextarea [(ngModel)]="addForm.job_description" [autoResize]="true" rows="4"
+                placeholder="Collez ici la description de l'offre…" class="w-full"></textarea>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Annuler" icon="pi pi-times" class="p-button-text p-button-sm"
+            (click)="showAddDialog = false"></button>
+    <button pButton label="Ajouter" icon="pi pi-check" class="p-button-sm"
+            [loading]="isSavingAdd" [disabled]="!addForm.title || !addForm.company"
+            (click)="saveAdd()"></button>
+  </ng-template>
+</p-dialog>

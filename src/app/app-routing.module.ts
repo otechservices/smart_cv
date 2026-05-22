@@ -31,6 +31,12 @@ const routes: Routes = [
     ],
   },
 
+  /* ── Portfolio public ────────────────────────────────── */
+  {
+    path: 'p/:token',
+    loadChildren: () => import('./modules/portfolio/portfolio.module').then(m => m.PortfolioModule),
+  },
+
   /* ── Admin shell ──────────────────────────────────────── */
   {
     path: 'admin',

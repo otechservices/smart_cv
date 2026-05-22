@@ -1,5 +1,5 @@
 <div class="page-wrapper">
-  <div class="page-header flex items-start justify-between gap-4">
+  <div class="page-header cv-form-header">
     <div class="flex items-center gap-3">
       <button pButton pRipple icon="pi pi-arrow-left"
               class="p-button-text p-button-sm text-slate-500"
@@ -11,7 +11,7 @@
         <p class="text-xs text-slate-400 mt-1 m-0">Prévisualisation en temps réel</p>
       </div>
     </div>
-    <div class="flex items-center gap-3 shrink-0">
+    <div class="cv-form-actions">
 
       <!-- Indicateur auto-save -->
       <span *ngIf="saveStatus === 'saving'" class="save-indicator saving">
@@ -24,10 +24,42 @@
         <i class="pi pi-exclamation-circle"></i> Erreur
       </span>
 
+      <!-- Toggle public -->
+      <div class="public-toggle-wrap">
+        <button pButton pRipple type="button"
+                [icon]="isPublic ? 'pi pi-globe' : 'pi pi-lock'"
+                [label]="isPublic ? 'Public' : 'Privé'"
+                [loading]="isTogglingPublic"
+                [ngClass]="isPublic ? 'p-button-sm btn-public-on' : 'p-button-sm btn-public-off'"
+                pTooltip="Activer/désactiver la page publique" tooltipPosition="bottom"
+                (click)="togglePublic()"></button>
+        <div *ngIf="isPublic && publicUrl" class="public-url-chip">
+          <a [href]="publicUrl" target="_blank" class="public-url-text">{{ publicUrl }}</a>
+          <button pButton type="button" icon="pi pi-copy"
+                  class="p-button-rounded p-button-text p-button-sm public-copy-btn"
+                  pTooltip="Copier le lien" (click)="copyPublicUrl()"></button>
+        </div>
+      </div>
+
       <button pButton pRipple type="button"
-              label="Exporter PDF" icon="pi pi-download"
-              class="btn-secondary p-button-sm"
-              (click)="onExportPdf()"></button>
+              icon="pi pi-palette" label="Design"
+              pTooltip="Éditeur de présentation" tooltipPosition="bottom"
+              class="p-button-sm p-button-outlined design-btn"
+              [routerLink]="['/app/cv', cvId, 'design']"></button>
+
+      <div class="pdf-btn-group">
+        <button pButton pRipple type="button"
+                icon="pi pi-eye"
+                pTooltip="Aperçu PDF" tooltipPosition="bottom"
+                class="p-button-sm p-button-outlined pdf-preview-btn"
+                [loading]="isLoadingPdf"
+                (click)="onPreviewPdf()"></button>
+        <button pButton pRipple type="button"
+                icon="pi pi-download"
+                pTooltip="Télécharger PDF" tooltipPosition="bottom"
+                class="p-button-sm p-button-outlined pdf-download-btn"
+                (click)="onDownloadPdf()"></button>
+      </div>
       <button pButton pRipple type="button"
               label="Enregistrer" icon="pi pi-save"
               class="btn-primary p-button-sm"
@@ -42,6 +74,55 @@
     <div class="flex flex-col gap-4">
       <form [formGroup]="cvForm" (ngSubmit)="onSave()">
 
+        <!-- Choix du modèle + couleur -->
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                <i class="pi pi-palette text-sm"></i>
+              </div>
+              <span class="font-semibold text-slate-800 text-sm">Modèle &amp; couleur</span>
+            </div>
+            <span *ngIf="cvReference" class="cv-ref-badge">
+              <i class="pi pi-bookmark-fill"></i> {{ cvReference }}
+            </span>
+          </div>
+          <div class="p-4">
+            <!-- Templates -->
+            <div class="flex gap-3 mb-4">
+              <div *ngFor="let tpl of cvTemplates"
+                   class="template-card"
+                   [class.active]="cvForm.get('template')?.value === tpl.id"
+                   (click)="selectTemplate(tpl)">
+                <div class="template-thumb" [style.border-color]="cvForm.get('template')?.value === tpl.id ? cvForm.get('primaryColor')?.value : '#e2e8f0'">
+                  <div class="template-thumb-stripe" [style.background]="tpl.defaultColor"></div>
+                  <div class="template-thumb-lines">
+                    <div class="tl"></div><div class="tl w-3-4"></div><div class="tl w-1-2"></div>
+                  </div>
+                </div>
+                <div class="template-card-label">{{ tpl.label }}</div>
+                <div class="template-card-desc">{{ tpl.desc }}</div>
+              </div>
+            </div>
+            <!-- Color picker -->
+            <div>
+              <p class="text-xs text-slate-400 mb-2">Couleur principale</p>
+              <div class="color-picker-row">
+                <div *ngFor="let c of presetColors"
+                     class="color-swatch"
+                     [style.background]="c"
+                     [class.active]="cvForm.get('primaryColor')?.value === c"
+                     (click)="cvForm.get('primaryColor')?.setValue(c)">
+                </div>
+                <input type="color"
+                       class="color-custom-input"
+                       [value]="cvForm.get('primaryColor')?.value"
+                       (input)="cvForm.get('primaryColor')?.setValue($any($event.target).value)">
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Informations personnelles -->
         <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
           <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
@@ -51,6 +132,28 @@
             <span class="font-semibold text-slate-800 text-sm">Informations personnelles</span>
           </div>
           <div formGroupName="personalInfo" class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- Upload photo -->
+            <div class="md:col-span-2 flex items-center gap-4">
+              <div class="photo-upload-zone" (click)="photoInput.click()">
+                <img *ngIf="cvForm.get('photo')?.value" [src]="cvForm.get('photo')?.value" class="photo-preview">
+                <div *ngIf="!cvForm.get('photo')?.value" class="photo-placeholder">
+                  <i class="pi pi-camera text-xl text-slate-300"></i>
+                  <span class="text-xs text-slate-400 mt-1">Photo</span>
+                </div>
+              </div>
+              <div class="flex flex-col gap-1">
+                <button pButton type="button" icon="pi pi-upload" label="Choisir une photo"
+                        class="p-button-sm p-button-outlined p-button-secondary"
+                        (click)="photoInput.click()"></button>
+                <button *ngIf="cvForm.get('photo')?.value" pButton type="button"
+                        icon="pi pi-times" label="Supprimer"
+                        class="p-button-sm p-button-text p-button-danger"
+                        (click)="removePhoto()"></button>
+                <p class="text-xs text-slate-400 m-0">JPG, PNG · max 5 Mo · recadrage auto 200×200</p>
+              </div>
+              <input #photoInput type="file" accept="image/*" class="hidden" (change)="onPhotoUpload($event)">
+            </div>
             <div class="field">
               <label class="field-label">Nom complet <span class="field-required">*</span></label>
               <input pInputText formControlName="name" placeholder="ex. Alice Martin" class="w-full"
@@ -91,11 +194,18 @@
 
         <!-- Résumé professionnel -->
         <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4">
-          <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
-            <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center text-violet-600">
-              <i class="pi pi-align-left text-sm"></i>
+          <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center text-violet-600">
+                <i class="pi pi-align-left text-sm"></i>
+              </div>
+              <span class="font-semibold text-slate-800 text-sm">Résumé professionnel</span>
             </div>
-            <span class="font-semibold text-slate-800 text-sm">Résumé professionnel</span>
+            <button pButton type="button"
+                    label="Optimiser" icon="pi pi-sparkles"
+                    class="p-button-text p-button-sm ai-optimize-btn"
+                    [loading]="isOptimizingSummary"
+                    (click)="optimizeSummary()"></button>
           </div>
           <div class="p-5 field">
             <quill-editor formControlName="professionalSummary"
@@ -139,12 +249,21 @@
                 <input pInputText placeholder="Poste" formControlName="position" class="bg-white">
                 <input pInputText placeholder="Début (ex. Jan 2020)" formControlName="startDate" class="bg-white">
                 <input pInputText placeholder="Fin (ex. Déc 2022 ou Présent)" formControlName="endDate" class="bg-white">
-                <quill-editor formControlName="description"
-                              [modules]="quillSimple"
-                              placeholder="Description du poste et réalisations..."
-                              [styles]="{ 'min-height': '80px', 'font-family': 'Inter, sans-serif', 'font-size': '0.8125rem', 'background': '#fff' }"
-                              class="quill-field md:col-span-2 bg-white">
-                </quill-editor>
+                <div class="md:col-span-2">
+                  <quill-editor formControlName="description"
+                                [modules]="quillSimple"
+                                placeholder="Description du poste et réalisations..."
+                                [styles]="{ 'min-height': '80px', 'font-family': 'Inter, sans-serif', 'font-size': '0.8125rem', 'background': '#fff' }"
+                                class="quill-field bg-white">
+                  </quill-editor>
+                  <div class="flex justify-end mt-1">
+                    <button pButton type="button"
+                            label="Optimiser" icon="pi pi-sparkles"
+                            class="p-button-text p-button-sm ai-optimize-btn"
+                            [loading]="optimizingExpIndex === i"
+                            (click)="optimizeExperience(i)"></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -256,3 +375,21 @@
 
   </div>
 </div>
+
+<!-- ── Offcanvas aperçu PDF ──────────────────────────────── -->
+<p-sidebar [(visible)]="pdfSidebarVisible"
+           position="right"
+           styleClass="pdf-sidebar"
+           [style]="{ width: '50vw' }"
+           (onHide)="closePdfSidebar()">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <i class="pi pi-file-pdf text-red-500"></i>
+      <span class="font-semibold text-slate-800">Aperçu PDF</span>
+    </div>
+  </ng-template>
+  <iframe *ngIf="pdfSafeUrl"
+          [src]="pdfSafeUrl"
+          class="pdf-iframe"
+          type="application/pdf"></iframe>
+</p-sidebar>

@@ -361,3 +361,34 @@ a.btn-secondary.p-button:hover {
   p:last-child { margin-bottom: 0; }
   ul, ol { padding-left: 1.25em; margin: .25em 0; }
 }
+
+/* ─── Responsive — Mobile & Tablet ─────────────────────────────── */
+@media (max-width: 767px) {
+  /* Sidebar collapses to icon-only strip */
+  .app-shell aside.sidebar {
+    width: 52px !important;
+    min-width: 52px !important;
+    overflow: hidden;
+  }
+  .app-shell aside.sidebar .sidebar-logo span,
+  .app-shell aside.sidebar .nav-item span,
+  .app-shell aside.sidebar .sidebar-bottom p,
+  .app-shell aside.sidebar .sidebar-bottom .min-w-0 {
+    display: none !important;
+  }
+  .app-shell aside.sidebar .sidebar-logo { padding: 1rem .6rem; justify-content: center; }
+  .app-shell aside.sidebar .nav-item { padding: .65rem; justify-content: center; gap: 0; }
+  .app-shell aside.sidebar .nav-item::before { display: none; }
+  .app-shell aside.sidebar .sidebar-bottom { align-items: center; padding: .75rem .4rem; }
+  .app-shell aside.sidebar .sidebar-bottom > button,
+  .app-shell aside.sidebar .sidebar-bottom > div.flex { padding: .6rem; justify-content: center; gap: 0; }
+  .app-shell aside.sidebar p.text-xs { display: none !important; }
+
+  /* Page wrapper tighter padding */
+  .page-wrapper { padding: 1rem; }
+  .page-header h1 { font-size: 1.2rem; }
+}
+
+@media (max-width: 479px) {
+  .app-shell aside.sidebar { width: 44px !important; min-width: 44px !important; }
+}

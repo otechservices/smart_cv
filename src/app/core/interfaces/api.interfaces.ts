@@ -57,6 +57,40 @@ export interface Application {
   status: ApplicationStatus;
 }
 
+/* ── Job Search ──────────────────────────────────────────── */
+export interface JobOffer {
+  id: string;
+  title: string;
+  company: string;
+  logo: string | null;
+  location: string;
+  job_type: string;
+  salary: string | null;
+  url: string;
+  description: string;
+  tags: string[];
+  posted_at: string | null;
+  source: string;
+}
+
+export type QueueStatus = 'pending' | 'letter_ready' | 'sent' | 'viewed' | 'interviewing' | 'offer' | 'rejected';
+
+export interface JobQueueItem {
+  id: number;
+  user_id: number;
+  cv_id: number | null;
+  title: string;
+  company: string;
+  location: string | null;
+  job_url: string | null;
+  job_description: string | null;
+  cover_letter: string | null;
+  status: QueueStatus;
+  source: string | null;
+  applied_at: string | null;
+  created_at: string;
+}
+
 /* ── Auth ────────────────────────────────────────────────── */
 export interface AuthUser {
   id: number;

@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { JobRoutingModule } from './job-routing.module';
-import { LetterComponent } from './components/letter/letter.component';
-import { JobTrackingComponent } from './components/job-tracking/job-tracking.component';
+import { LetterComponent }       from './components/letter/letter.component';
+import { JobTrackingComponent }  from './components/job-tracking/job-tracking.component';
+import { JobSearchComponent }    from './components/job-search/job-search.component';
+import { JobQueuePageComponent } from './components/job-queue-page/job-queue-page.component';
 
 // PrimeNG
 import { PanelModule } from 'primeng/panel';
@@ -24,10 +27,13 @@ import { QuillModule } from 'ngx-quill';
 @NgModule({
   declarations: [
     LetterComponent,
-    JobTrackingComponent
+    JobTrackingComponent,
+    JobSearchComponent,
+    JobQueuePageComponent,
   ],
   imports: [
     CommonModule,
+    RouterModule,
     JobRoutingModule,
     FormsModule,
     ReactiveFormsModule,

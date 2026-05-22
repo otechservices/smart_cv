@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_URL } from '../config/api.config';
+import { ConfigService } from '../config/api.config';
 import { ApiResponse } from '../interfaces/api.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AIService {
-  private readonly url = `${API_URL}/ai`;
+  private readonly url = ConfigService.toApiUrl('ai');
 
   constructor(private http: HttpClient) {}
 
